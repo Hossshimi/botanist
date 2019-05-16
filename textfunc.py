@@ -151,7 +151,7 @@ async def help(client,message): #help--------------------------------
     reply = (f"{message.author.mention}\n```=========== HELP ===========")
     for command,desc in sorted(commands.items()):
         reply = reply + f"\n{fmt.format(command,desc)}"
-    reply = reply + "```"
+    reply = reply + "``` https://bot-anist.hatenablog.com/"
     await client.send_message(message.channel,reply)
 
 async def kabaorun(client,message): #精神を加速させろ
