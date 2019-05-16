@@ -144,7 +144,7 @@ async def nick(client,message): #change nick
 
 async def help(client,message): #help--------------------------------
     fmt = "{0:<12}: {1}"
-    commands_path = os.path.normpath(os.path.join(os.path.abspath(__file__),r"..\data\helplist.json"))
+    commands_path = os.path.normpath(os.path.join(os.path.abspath(__file__),r"../data/helplist.json"))
     commands_open = open(commands_path,"r",encoding="utf-8-sig")
     commands = json.load(commands_open)
     commands_open.close()
