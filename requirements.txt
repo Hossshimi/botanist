@@ -34,7 +34,6 @@ pypiwin32==223
 pypresence==3.3.1
 python-dateutil==2.8.0
 pytz==2018.9
-pywin32==224
 ratelim==0.1.6
 requests==2.21.0
 six==1.11.0
