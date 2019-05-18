@@ -1,3 +1,6 @@
+import discord
+client = discord.Client()
+
 import sys,os,json,random
 import datetime
 import getweather
