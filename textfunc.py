@@ -6,7 +6,6 @@ import datetime
 import getweather
 t = datetime.datetime.now
 
-
 async def vcfunc(audioname, msg=None): #音声流すだけ
     #print(t().strftime("[ %H:%M:%S ] "),"start audio function[",audioname,"]...")
     global player,vc_lock,voice,client
@@ -55,6 +54,8 @@ async def vcfunc(audioname, msg=None): #音声流すだけ
     #    vc_lock = False
 
 async def join(client,message): #join vc
+    LOG_CHANNEL_ID = "577890877234741248"
+    LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     if message.author.voice_channel == None:
         client.send_message(message.channel,"_err:please join vc_")
     else:
@@ -67,6 +68,8 @@ async def join(client,message): #join vc
         #airhorn_flag = True
 
 async def leave(client,message): #leave vc
+    LOG_CHANNEL_ID = "577890877234741248"
+    LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     try:
         vc_id = message.author.voice_channel.id
     except: pass
