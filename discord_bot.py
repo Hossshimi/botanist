@@ -43,7 +43,7 @@ func_list = {
     print(c.name)"""
 vc_id = None
 player = {}
-voice = {}
+vc = {}
 airhorn_flag = False
 vc_lock = False
 pflag = False
@@ -60,17 +60,17 @@ def getpath(rpath):
 @client.event
 async def on_ready(): #-------起動時処理-------------
     global LOG_CHANNEL
-    LOG_CHANNEL_ID = "577890877234741248"
+    LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     print(LOG_CHANNEL)
-    log = t().strftime("\n[ %H:%M:%S ] ")+"======= Logged in as : "+client.user.name+" "+client.user.id+"============"
-    await client.send_message(LOG_CHANNEL,log)
+    log = t().strftime("\n[ %H:%M:%S ] ")+"======= Logged in as : "+client.user.name+" "+str(client.user.id)+"============"
+    await LOG_CHANNEL.send(log)
     try:
         if (sys.argv[1] == "rs"):
             log = t().strftime("[ %H:%M:%S ] ")+"+++++++++++++ BOTanist was restarted +++++++++++++"
-            await client.send_message(LOG_CHANNEL,log)
-            channel = client.get_channel(sys.argv[2])
-            await client.send_message(channel,"**RESTARTED!**")
+            await LOG_CHANNEL.send(log)
+            channel = client.get_channel(int(sys.argv[2]))
+            await channel.send("**RESTARTED!**")
     except: pass
     finally: pass
 
@@ -98,38 +98,39 @@ async def on_voice_state_update(before, after): #VC参加時にairhorn
 @client.event
 async def on_message(message):
     global pflag,vc_id,vc_list
+    if message.author == client.user: #自分の発言は無視
+            return
  #--------------重要な制御-------------------------------------
-    if str(message.author.id)=="311147580715171842": #管理者権限
+    if str(message.author.id)==311147580715171842 : #管理者権限
         if message.content.startswith(">p"): #pause
             if pflag: pass
             else:
                 pflag = True
                 log = t().strftime("[ %H:%M:%S ] ")+"----- paused -----"
-                await client.send_message(LOG_CHANNEL,log)
+                await LOG_CHANNEL.send(log)
         if message.content.startswith(">rsm"): #resume
             if (not pflag): pass
             else:
                 pflag = False
                 log = t().strftime("[ %H:%M:%S ] ")+"----- resumed -----"
-                await client.send_message(LOG_CHANNEL,log)
+                await LOG_CHANNEL.send(log)
 
         if ">stop" in message.content: #stop
-            try: #vc_id 存在確認
+            """try: #vc_id 存在確認
                 channel = client.get_channel(vc_id)
-                vc_connected = client.is_voice_connected(channel.server)
-            except: pass
+                is_vc_connected = client.is_voice_connected(channel.server)
             finally: pass
-            if "vc_connected" in locals(): # vc接続解除
+            if "is_vc_connected" in locals(): # vc接続解除
                 voice = client.voice_client_in(channel.server)
                 await voice.disconnect()
                 log = t().strftime("[ %H:%M:%S ] ")+"----- vc disconnected -----"
-                await client.send_message(LOG_CHANNEL,log)
+                await LOG_CHANNEL.send(log)
             log = t().strftime("[ %H:%M:%S ] ")+"----- vc off -----"
-            await client.send_message(LOG_CHANNEL,log)
+            await LOG_CHANNEL.send(log)"""
             reply = f"{message.author.mention} Stop bot..."
-            await client.send_message(message.channel,reply)
+            await message.channel.send(reply)
             log = t().strftime("[ %H:%M:%S ] ")+"+++++++++++++ BOTanist stopped +++++++++++++"
-            await client.send_message(LOG_CHANNEL,log)
+            await LOG_CHANNEL.send(log)
             os._exit(0) #終了
             #except: print(t().strftime("[ %H:%M:%S ] "),"stop failed")
 
@@ -147,17 +148,14 @@ async def on_message(message):
         """if message.content.startswith(">test"):
             reply = message.author.id
             await client.send_message(message.channel,reply)"""
-
-        if message.author == client.user: #自分の発言は無視
-            return
        
-        if client.user.id in message.content: #メンション受けたら
+        if str(client.user.id) in message.content: #メンション受けたら
             reply = f"{message.author.mention} {random.choice(rep_list)}"
-            await client.send_message(message.channel, reply)
+            await message.channel.send(reply)
         
         if ("used to be" in message.content) or ("Used to be" in message.content):
             reply = '諦めるのは easy'
-            await client.send_message(message.channel, reply)
+            await message.channel.send(reply)
 
         ####### Voice Channel #######
         global player,airhorn_flag,vc_lock
@@ -168,14 +166,14 @@ async def on_message(message):
         
         for f in func_list:
             if f in str(message.content[1:]):
-                await func_list[f](client,message)
+                await func_list[f](client,message,vc)
                 break
             
 
         vccom = message.content
         vccom = vccom[1:]
         if vccom in vc_list:
-            await func.vcfunc(vccom, message)
+            await func.vcfunc(vccom, message, vc)
 
 
         #await f.textfunc_(client, message, vc_id)

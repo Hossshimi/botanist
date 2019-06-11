@@ -6,29 +6,23 @@ import datetime
 import getweather
 t = datetime.datetime.now
 
-async def vcfunc(audioname, msg=None): #音声流すだけ
+async def vcfunc(audioname, msg=None,vc): #音声流すだけ
     #print(t().strftime("[ %H:%M:%S ] "),"start audio function[",audioname,"]...")
     global player,vc_lock,voice,client
     audiofname = r"..\sounds\\" + audioname + ".mp3"
     audio_path = os.path.normpath(os.path.join(os.path.abspath(__file__),audiofname))
     vc_id = msg.author.voice_channel.id
     try:
-        player[vc_id].stop()
-        pass
+        if vc[vc_id].is_playing():
+            vc[vc_id].stop()
     except:
-        #print(t().strftime("[ %H:%M:%S ] "),"---VC error---")
-        #reply = f"{msg.author.mention} {sys.exc_info()}"
-        #await client.send_message(msg.channel, reply)
-        pass
-    finally:
         channel = client.get_channel(vc_id)
-        if client.is_voice_connected(channel.server):
-            voice[vc_id] = client.voice_client_in(channel.server)
+        if f"vc[{vc_id}]" in locals():
+            pass
         else:
-            voice[vc_id] = await client.join_voice_channel(channel)
-        player[vc_id] = voice[vc_id].create_ffmpeg_player(audio_path)
+            vc[vc_id] =  await channel.connect()
+        vc[vc_id].play(discord.FFmpegPCMAudio(audio_path))
         #player = player[vc_id]
-        player[vc_id].start()
         #print(t().strftime("[ %H:%M:%S ] "),"finish audio function[",audioname,"]")
 
 
@@ -53,43 +47,44 @@ async def vcfunc(audioname, msg=None): #音声流すだけ
     #if message.content.startswith(">donotstop"): #止まるんじゃねえぞ
     #    vc_lock = False
 
-async def join(client,message): #join vc
-    LOG_CHANNEL_ID = "577890877234741248"
+async def join(client,message,vc): #join vc
+    global vc,vc_id
+    LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
-    if message.author.voice_channel == None:
-        client.send_message(message.channel,"_err:please join vc_")
+    if message.author.voice.channel == None:
+        message.channel.send("_err:please join vc_")
     else:
-        vc_id = message.author.voice_channel.id
+        vc_id = message.author.voice.channel.id
         channel = client.get_channel(vc_id)
         airhorn_flag = False
-        await client.join_voice_channel(channel)
+        vc[vc_id] = await channel.connect()
         log = t().strftime("[ %H:%M:%S ] ")+"join vc["+str(channel)+"]"
-        await client.send_message(LOG_CHANNEL,log)
+        await LOG_CHANNEL.send(log)
         #airhorn_flag = True
 
-async def leave(client,message): #leave vc
-    LOG_CHANNEL_ID = "577890877234741248"
+async def leave(client,message,vc): #leave vc
+    LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     try:
-        vc_id = message.author.voice_channel.id
+        vc_id = message.author.voice.channel.id
     except: pass
     if "vc_id" in locals():
         channel = client.get_channel(vc_id)
         voice = client.voice_client_in(channel.server)
         await voice.disconnect()
         log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(channel)+"]"
-        await client.send_message(LOG_CHANNEL,log)
+        await LOG_CHANNEL.send(log)
     else:
         log = t().strftime("[ %H:%M:%S ] ")+"leave failed"
-        await client.send_message(LOG_CHANNEL,log)
+        await LOG_CHANNEL.send(log)
 
-async def shutup(client,message): #shut up
+async def shutup(client,message,vc): #shut up
     global player
     vc_id = message.author.voice_channel.id
     #channel = client.get_channel(vc_id)
     #voice = client.voice_client_in(channel.server)
     #player = player[vc_id]
-    player[vc_id].stop()
+    vc[vc_id].stop()
 
 
 async def weather(client,message): #weather
@@ -125,7 +120,7 @@ async def rand(client,message): #random
     elif ulist==None: result = "Err:選択肢の指定がありません"
     else:
         result = random.choice(ulist)
-    await client.send_message(message.channel,result)
+    await message.channel.send(result)
 
 
 async def say(client,message): #say
@@ -135,18 +130,18 @@ async def say(client,message): #say
     #    text = "/" + text[8:]
     #    await client.send_message(message.channel,text)
     #else:
-    await client.send_message(message.channel,text)
+    await message.channel.send(text)
 
 async def nick(client,message): #change nick
-    if str(message.author.id) == "311147580715171842":
+    if str(message.author.id) == 311147580715171842 :
         nick = str(message.content)
         nick = nick[6:]
         await client.change_nickname(message.server.me, nick)
         reply = f"{message.author.mention} Changed nick"
-        await client.send_message(message.channel,reply)
+        await message.channel.send(reply)
     else:
         reply = f"{message.author.mention} Err:権限がありません"
-        await client.send_message(message.channel,reply)
+        await message.channel.send(reply)
 
 async def help(client,message): #help--------------------------------
     fmt = "{0:<12}: {1}"
@@ -158,7 +153,7 @@ async def help(client,message): #help--------------------------------
     for command,desc in sorted(commands.items()):
         reply = reply + f"\n{fmt.format(command,desc)}"
     reply = reply + "``` https://bot-anist.hatenablog.com/"
-    await client.send_message(message.channel,reply)
+    await message.channel.send(reply)
 
 async def kabaorun(client,message): #精神を加速させろ
     user = str(message.content)
@@ -167,7 +162,7 @@ async def kabaorun(client,message): #精神を加速させろ
         reply = "```  　　　　　　　　　　∩＿∩\n　　　　　　　　　 ／ ＼ ／ ＼\n　　　　　　　　　|  (°)=(°) |\n　　　　　　　　　|　  ●_● 　|\n　　　　　　　　 / 　　   　 ヽ\n　　　　   r⌒  |〃 ------ ヾ |\n　　　　　/　 i／  | _＿二＿＿ノ\n　　　　./　 ／　　/　　　　   ) 　\n　　　 ./ ／　　／　　　　 　/／\n　　　/　　　.／　　　　　/￣\n　　 .ヽ､__.／　　　 ／ ⌒ヽ\n　 　　　　 r　　  ／      |\n　　　　　/　　 　　  　   ﾉ\n　　　　/　　　　 / 　　  /\n　　　./　　　　／/　   ／\n　　 /.　 　.／ ./   ／\n　　i　　　／  ./  ／\n　　i　　./  .ノ.^/\n　　i　 ./  　|_／\n　　i   /\n　／  /\n (_／　精神を加速させろ```"
     else:
         reply = "```  　　　　　　　　　　∩＿∩\n　　　　　　　　　 ／ ＼ ／ ＼\n　　　　　　　　　|  (°)=(°) |\n　　　　　　　　　|　  ●_● 　|\n　　　　　　　　 / 　　   　 ヽ\n　　　　   r⌒  |〃 ------ ヾ |\n　　　　　/　 i／  | _＿二＿＿ノ\n　　　　./　 ／　　/　　　　   ) 　\n　　　 ./ ／　　／　　　　 　/／\n　　　/　　　.／　　　　　/￣\n　　 .ヽ､__.／　　　 ／ ⌒ヽ\n　 　　　　 r　　  ／      |\n　　　　　/　　 　　  　   ﾉ\n　　　　/　　　　 / 　　  /\n　　　./　　　　／/　   ／\n　　 /.　 　.／ ./   ／\n　　i　　　／  ./  ／\n　　i　　./  .ノ.^/\n　　i　 ./  　|_／\n　　i   /\n　／  /\n (_／　"+user+"```"
-    await client.send_message(message.channel, reply)
+    await message.channel.send(reply)
 
 async def chikuwa(client,message): #ちくわ
     user = str(message.content)
@@ -180,7 +175,7 @@ async def chikuwa(client,message): #ちくわ
         user = int(user) - 1
         chikuwa_ext = [" \_ \_\_\_\_\_","  ≡ ≡≡  "," ￣￣ ￣"]
         reply = ".   \_\_ \_\_\_ \_\_" + chikuwa_ext[0]*user +"\n(0) ≡ ≡≡ " + chikuwa_ext[1]*user + ")\n   ￣￣￣" + chikuwa_ext[2]*user
-    await client.send_message(message.channel,reply)
+    await message.channel.send(reply)
 
 async def anagosan(client,message): #ちくしょう
     user = str(message.content)
@@ -189,7 +184,7 @@ async def anagosan(client,message): #ちくしょう
         reply = ".　   ／￣⌒⌒ヽ\n  　 |   ／￣￣￣ヽ\n  　 |   | 　  ／ 　＼|\n　 .|    |   　 ´　｀  |\n 　(6       　つ  　/　　ちくしょう・・・\n  　.| 　     / ／⌒⌒ヽ\n  　 |　         ＼   ￣ ノ\n  　  |　　       /￣"
     else:
         reply = ".　   ／￣⌒⌒ヽ\n  　 |   ／￣￣￣ヽ\n  　 |   | 　  ／ 　＼|\n　 .|    |   　 ´　｀  |\n 　(6       　つ  　/　"+user+"\n  　.| 　     / ／⌒⌒ヽ\n  　 |　         ＼   ￣ ノ\n  　  |　　       /￣"
-    await client.send_message(message.channel, reply)
+    await message.channel.send(reply)
 
 async def HG(client,message): #大池沼
     userlist=[]
@@ -197,29 +192,29 @@ async def HG(client,message): #大池沼
         userlist.append(member.id)
     randuser = random.choice(userlist)
     reply = "どーもーハードゲイ( <@!"+randuser+"> )で～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼） セイセイセイ・セイセイセイ・セイセイセイセイセイセイセイ（三三七拍子超池沼）ど～も～ハードゲイで～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼）"
-    await client.send_message(message.channel,reply)
+    await message.channel.send(reply)
 
 async def walkingdrum(client,message): #歩くドラム缶の恐怖
     string = str(message.content)
     string = string[13:]
     if string == "":
         reply = "【歩くドラム缶の恐怖】\n\n　　　 　}二二{\n　　　 　}二二{\n　　 　　}二二{\n  　  　　  /   ／⌒)\n　　　　| ／ /　/\n　　　　ヽ_｜ /\n　　　　  / ｜｜\n　　　　/　(＿＼\n　　　／ ／　 ﾋﾉ\n　　  / ／\n　　`( ｜\n　  　L/"
-        await client.send_message(message.channel,reply)
+        await message.channel.send(reply)
     else:
         reply = "【"+string+"】\n\n　　　 　}二二{\n　　　 　}二二{\n　　 　　}二二{\n  　  　　  /   ／⌒)\n　　　　| ／ /　/\n　　　　ヽ_｜ /\n　　　　  / ｜｜\n　　　　/　(＿＼\n　　　／ ／　 ﾋﾉ\n　　  / ／\n　　`( ｜\n　  　L/"
-        await client.send_message(message.channel, reply)
+        await message.channel.send(reply)
 
 async def kodakumi(client,message):
     easylist = ["difficult","easy","so easy","very easy","hyper easy","ultra easy"]
     easylevel = str(message.content)
     easylevel = easylevel[10:12]
     if easylevel == "":
-        await client.send_message(message.channel, "全て投げ出してもいいじゃないの?\nUsed to be 諦めるのは easy")
+        await message.channel.send("全て投げ出してもいいじゃないの?\nUsed to be 諦めるのは easy")
     elif 0 <= int(easylevel) <= 5:
         reply = "全て投げ出してもいいじゃないの?\nUsed to be 諦めるのは " + str(easylist[int(easylevel)])
-        await client.send_message(message.channel, reply)
+        await message.channel.send(reply)
     else:
-        await client.send_message(message.channel,"easylevelが対応範囲外じゃないの?\nUsed to be help参照は easy")
+        await message.channel.send("easylevelが対応範囲外じゃないの?\nUsed to be help参照は easy")
 
 #    if message.content.startswith(">lovelyradio"):
 #        await client.send_message(message.channel, "えいニャ！えいニャ！渚の小悪魔☆えいニャ！えいニャ！ラヴリィ～レイディオ！")
