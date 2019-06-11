@@ -6,24 +6,23 @@ import datetime
 import getweather
 t = datetime.datetime.now
 
-async def vcfunc(audioname, msg=None,vc): #音声流すだけ
+async def vcfunc(audioname, msg, vc): #音声流すだけ
     #print(t().strftime("[ %H:%M:%S ] "),"start audio function[",audioname,"]...")
     global player,vc_lock,voice,client
     audiofname = r"..\sounds\\" + audioname + ".mp3"
     audio_path = os.path.normpath(os.path.join(os.path.abspath(__file__),audiofname))
-    vc_id = msg.author.voice_channel.id
+    vc_id = msg.author.voice.channel.id
+    if vc[vc_id].is_playing():
+        vc[vc_id].stop()
+    channel = msg.author.voice.channel
     try:
-        if vc[vc_id].is_playing():
-            vc[vc_id].stop()
+        vc[vc_id] =  await channel.connect()
     except:
-        channel = client.get_channel(vc_id)
-        if f"vc[{vc_id}]" in locals():
-            pass
-        else:
-            vc[vc_id] =  await channel.connect()
+        pass
+    finally:
         vc[vc_id].play(discord.FFmpegPCMAudio(audio_path))
-        #player = player[vc_id]
-        #print(t().strftime("[ %H:%M:%S ] "),"finish audio function[",audioname,"]")
+    #player = player[vc_id]
+    #print(t().strftime("[ %H:%M:%S ] "),"finish audio function[",audioname,"]")
 
 
 #async def textfunc_(client, message, vc_id):
@@ -48,7 +47,7 @@ async def vcfunc(audioname, msg=None,vc): #音声流すだけ
     #    vc_lock = False
 
 async def join(client,message,vc): #join vc
-    global vc,vc_id
+    global vc_id
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     if message.author.voice.channel == None:
@@ -68,11 +67,9 @@ async def leave(client,message,vc): #leave vc
     try:
         vc_id = message.author.voice.channel.id
     except: pass
-    if "vc_id" in locals():
-        channel = client.get_channel(vc_id)
-        voice = client.voice_client_in(channel.server)
-        await voice.disconnect()
-        log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(channel)+"]"
+    if f"vc{vc_id}" in locals():
+        await vc[vc_id].disconnect()
+        log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id])+"]"
         await LOG_CHANNEL.send(log)
     else:
         log = t().strftime("[ %H:%M:%S ] ")+"leave failed"
@@ -80,7 +77,7 @@ async def leave(client,message,vc): #leave vc
 
 async def shutup(client,message,vc): #shut up
     global player
-    vc_id = message.author.voice_channel.id
+    vc_id = message.author.voice.channel.id
     #channel = client.get_channel(vc_id)
     #voice = client.voice_client_in(channel.server)
     #player = player[vc_id]
@@ -136,11 +133,11 @@ async def nick(client,message): #change nick
     if str(message.author.id) == 311147580715171842 :
         nick = str(message.content)
         nick = nick[6:]
-        await client.change_nickname(message.server.me, nick)
+        await message.guild.me.edit(nick=nick)
         reply = f"{message.author.mention} Changed nick"
         await message.channel.send(reply)
     else:
-        reply = f"{message.author.mention} Err:権限がありません"
+        reply = f"{message.author.mention} Err:you don't have permission"
         await message.channel.send(reply)
 
 async def help(client,message): #help--------------------------------

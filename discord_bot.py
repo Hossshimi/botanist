@@ -1,4 +1,4 @@
-#=====VERSION:3.3.14=====
+#=====VERSION:4.0.2=====
 
 import discord
 import random
@@ -101,7 +101,7 @@ async def on_message(message):
     if message.author == client.user: #自分の発言は無視
             return
  #--------------重要な制御-------------------------------------
-    if str(message.author.id)==311147580715171842 : #管理者権限
+    if message.author.id==311147580715171842 : #管理者権限
         if message.content.startswith(">p"): #pause
             if pflag: pass
             else:
