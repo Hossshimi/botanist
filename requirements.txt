@@ -12,6 +12,7 @@ decorator==4.3.2
 discord.py==1.2.2
 ffmpeg==1.4
 future==0.17.1
+geocoder==1.38.1
 http-ece==1.1.0
 idna==2.8
 isort==4.3.4
