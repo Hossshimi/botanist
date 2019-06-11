@@ -9,7 +9,7 @@ t = datetime.datetime.now
 async def vcfunc(audioname, msg, vc): #音声流すだけ
     #print(t().strftime("[ %H:%M:%S ] "),"start audio function[",audioname,"]...")
     global player,vc_lock,voice,client
-    audiofname = r"..\sounds\\" + audioname + ".mp3"
+    audiofname = r"../sounds//" + audioname + ".mp3"
     audio_path = os.path.normpath(os.path.join(os.path.abspath(__file__),audiofname))
     vc_id = msg.author.voice.channel.id
     if vc[vc_id].is_playing():
