@@ -1,4 +1,4 @@
-#=====VERSION:4.0.7=====
+#=====VERSION:4.0.8=====
 
 import discord
 import random
@@ -15,7 +15,7 @@ import textfunc as func
 import subprocess
 import datetime
 
-VERSION = "4.0.7"
+VERSION = "4.0.8"
 client = discord.Client()
 t = datetime.datetime.now
 rep_list = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")

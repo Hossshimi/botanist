@@ -85,7 +85,7 @@ async def shutup(client,message,vc): #shut up
 
 
 async def weather(client,message,vc): #weather
-    getweather.get_weather(message.content[9:])
+    await message.channel.send(getweather.get_weather(message.content[9:]))
 
 async def rand(client,message,vc): #random
     text = str(message.content)
@@ -185,7 +185,7 @@ async def anagosan(client,message,vc): #ちくしょう
 
 async def HG(client,message,vc): #大池沼
     userlist=[]
-    for member in message.server.members :
+    for member in message.guild.members :
         userlist.append(member.id)
     randuser = random.choice(userlist)
     reply = "どーもーハードゲイ( <@!"+randuser+"> )で～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼） セイセイセイ・セイセイセイ・セイセイセイセイセイセイセイ（三三七拍子超池沼）ど～も～ハードゲイで～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼）"
