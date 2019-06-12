@@ -1,4 +1,4 @@
-#=====VERSION:4.0.5=====
+#=====VERSION:4.0.6=====
 
 import discord
 import random
@@ -15,6 +15,7 @@ import textfunc as func
 import subprocess
 import datetime
 
+VERSION = "4.0.6"
 client = discord.Client()
 t = datetime.datetime.now
 rep_list = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
@@ -63,7 +64,7 @@ async def on_ready(): #-------起動時処理-------------
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     print(LOG_CHANNEL)
-    log = t().strftime("\n[ %H:%M:%S ] ")+"======= Logged in as : "+client.user.name+" "+str(client.user.id)+"============"
+    log = t().strftime("\n[ %H:%M:%S ] ")+"======= Logged in as : " + client.user.name +" "+ VERSION +"============"
     await LOG_CHANNEL.send(log)
     try:
         if (sys.argv[1] == "rs"):

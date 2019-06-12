@@ -8,7 +8,7 @@ t = datetime.datetime.now
 
 async def vcfunc(audioname, msg, vc): #音声流すだけ
     #print(t().strftime("[ %H:%M:%S ] "),"start audio function[",audioname,"]...")
-    global player,vc_lock,voice,client
+    global client
     audiofname = r"../sounds//" + audioname + ".mp3"
     audio_path = os.path.normpath(os.path.join(os.path.abspath(__file__),audiofname))
     vc_id = msg.author.voice.channel.id
@@ -47,7 +47,7 @@ async def vcfunc(audioname, msg, vc): #音声流すだけ
     #    vc_lock = False
 
 async def join(client,message,vc): #join vc
-    global vc_id
+    global vc_id,airhorn_flag
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     if message.author.voice.channel == None:
@@ -67,17 +67,16 @@ async def leave(client,message,vc): #leave vc
     try:
         vc_id = message.author.voice.channel.id
     except: pass
-    if "vc_id" in locals():
-        if f"vc{vc_id}" in locals():
+    try:
+        #if f"vc{vc_id}" in locals():
             await vc[vc_id].disconnect()
             log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id])+"]"
             await LOG_CHANNEL.send(log)
-    else:
+    except:
         log = t().strftime("[ %H:%M:%S ] ")+"leave failed"
         await LOG_CHANNEL.send(log)
 
 async def shutup(client,message,vc): #shut up
-    global player
     vc_id = message.author.voice.channel.id
     #channel = client.get_channel(vc_id)
     #voice = client.voice_client_in(channel.server)
