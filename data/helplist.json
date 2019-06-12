@@ -6,7 +6,7 @@
 	"chikuwa":"opt...length(default=1,1~)",
 	"kabaorun":"精神を加速させろ opt...任意の文字列",
 	"say":"私が代弁者になろう。",
-	"shut up":"[vc]黙らせよう",
+	"shutup":"[vc]黙らせよう",
  	"sumanko":"[vc]すまんです!!!",
 	"neverdie":"[vc]My Hope Will Never Die",
 	"join":"[vc]join vc",
@@ -22,6 +22,5 @@
 	"USSR":"[vc]Гимн Советского Союза",
 	"rand":"opt...mode,modeopt",
 	"roboto":"[vc]ﾄﾞﾓｱﾘｶﾞﾄ",
-	"restart":"restart BOTanist",
 	"weather":"天気予報 opt...Location(a-z)"
 }

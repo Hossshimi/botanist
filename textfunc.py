@@ -70,7 +70,7 @@ async def leave(client,message,vc): #leave vc
     try:
         #if f"vc{vc_id}" in locals():
             await vc[vc_id].disconnect()
-            log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id])+"]"
+            log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id].name)+"]"
             await LOG_CHANNEL.send(log)
     except:
         log = t().strftime("[ %H:%M:%S ] ")+"leave failed"
@@ -186,7 +186,8 @@ async def anagosan(client,message,vc): #ちくしょう
 async def HG(client,message,vc): #大池沼
     userlist=[]
     for member in message.guild.members :
-        userlist.append(member.id)
+        if member.Status == "online":
+            userlist.append(member.id)
     randuser = random.choice(userlist)
     reply = "どーもーハードゲイ( <@!"+str(randuser)+"> )で～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼） セイセイセイ・セイセイセイ・セイセイセイセイセイセイセイ（三三七拍子超池沼）ど～も～ハードゲイで～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼）"
     await message.channel.send(reply)

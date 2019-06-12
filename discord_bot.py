@@ -21,7 +21,7 @@ t = datetime.datetime.now
 rep_list = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
 vc_list = ["neverdie", "sumanko", "airhorn", "goldrush1", "goldrush2",
             "scream","yarimasunee","kowareruwa","yurusite","soudayo",
-            "hahahahahahaha","USSR","roboto"]
+            "haha","USSR","roboto"]
 func_list = {
     "join" : func.join,
     "leave" : func.leave,
