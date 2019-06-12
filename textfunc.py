@@ -130,7 +130,7 @@ async def say(client,message,vc): #say
     await message.channel.send(text)
 
 async def nick(client,message,vc): #change nick
-    if str(message.author.id) == 311147580715171842 :
+    if message.author.id == 311147580715171842 :
         nick = str(message.content)
         nick = nick[6:]
         await message.guild.me.edit(nick=nick)
