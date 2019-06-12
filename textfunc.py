@@ -67,10 +67,11 @@ async def leave(client,message,vc): #leave vc
     try:
         vc_id = message.author.voice.channel.id
     except: pass
-    if f"vc{vc_id}" in locals():
-        await vc[vc_id].disconnect()
-        log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id])+"]"
-        await LOG_CHANNEL.send(log)
+    if "vc_id" in locals():
+        if f"vc{vc_id}" in locals():
+            await vc[vc_id].disconnect()
+            log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id])+"]"
+            await LOG_CHANNEL.send(log)
     else:
         log = t().strftime("[ %H:%M:%S ] ")+"leave failed"
         await LOG_CHANNEL.send(log)
@@ -84,10 +85,10 @@ async def shutup(client,message,vc): #shut up
     vc[vc_id].stop()
 
 
-async def weather(client,message): #weather
+async def weather(client,message,vc): #weather
     getweather.get_weather(message.content[9:])
 
-async def rand(client,message): #random
+async def rand(client,message,vc): #random
     text = str(message.content)
     text = text[6:]
     ulist = text.split()
@@ -120,7 +121,7 @@ async def rand(client,message): #random
     await message.channel.send(result)
 
 
-async def say(client,message): #say
+async def say(client,message,vc): #say
     text = str(message.content)
     text = text[5:]
     #if text[:7] == "command":
@@ -129,7 +130,7 @@ async def say(client,message): #say
     #else:
     await message.channel.send(text)
 
-async def nick(client,message): #change nick
+async def nick(client,message,vc): #change nick
     if str(message.author.id) == 311147580715171842 :
         nick = str(message.content)
         nick = nick[6:]
@@ -140,7 +141,7 @@ async def nick(client,message): #change nick
         reply = f"{message.author.mention} Err:you don't have permission"
         await message.channel.send(reply)
 
-async def help(client,message): #help--------------------------------
+async def help(client,message,vc): #help--------------------------------
     fmt = "{0:<12}: {1}"
     commands_path = os.path.normpath(os.path.join(os.path.abspath(__file__),r"../data/helplist.json"))
     commands_open = open(commands_path,"r",encoding="utf-8-sig")
@@ -152,7 +153,7 @@ async def help(client,message): #help--------------------------------
     reply = reply + "``` https://bot-anist.hatenablog.com/"
     await message.channel.send(reply)
 
-async def kabaorun(client,message): #精神を加速させろ
+async def kabaorun(client,message,vc): #精神を加速させろ
     user = str(message.content)
     user = user[10:]
     if user == "":
@@ -161,7 +162,7 @@ async def kabaorun(client,message): #精神を加速させろ
         reply = "```  　　　　　　　　　　∩＿∩\n　　　　　　　　　 ／ ＼ ／ ＼\n　　　　　　　　　|  (°)=(°) |\n　　　　　　　　　|　  ●_● 　|\n　　　　　　　　 / 　　   　 ヽ\n　　　　   r⌒  |〃 ------ ヾ |\n　　　　　/　 i／  | _＿二＿＿ノ\n　　　　./　 ／　　/　　　　   ) 　\n　　　 ./ ／　　／　　　　 　/／\n　　　/　　　.／　　　　　/￣\n　　 .ヽ､__.／　　　 ／ ⌒ヽ\n　 　　　　 r　　  ／      |\n　　　　　/　　 　　  　   ﾉ\n　　　　/　　　　 / 　　  /\n　　　./　　　　／/　   ／\n　　 /.　 　.／ ./   ／\n　　i　　　／  ./  ／\n　　i　　./  .ノ.^/\n　　i　 ./  　|_／\n　　i   /\n　／  /\n (_／　"+user+"```"
     await message.channel.send(reply)
 
-async def chikuwa(client,message): #ちくわ
+async def chikuwa(client,message,vc): #ちくわ
     user = str(message.content)
     user = user[9:]
     if user == "":
@@ -174,7 +175,7 @@ async def chikuwa(client,message): #ちくわ
         reply = ".   \_\_ \_\_\_ \_\_" + chikuwa_ext[0]*user +"\n(0) ≡ ≡≡ " + chikuwa_ext[1]*user + ")\n   ￣￣￣" + chikuwa_ext[2]*user
     await message.channel.send(reply)
 
-async def anagosan(client,message): #ちくしょう
+async def anagosan(client,message,vc): #ちくしょう
     user = str(message.content)
     user = user[10:]
     if user == "":
@@ -183,7 +184,7 @@ async def anagosan(client,message): #ちくしょう
         reply = ".　   ／￣⌒⌒ヽ\n  　 |   ／￣￣￣ヽ\n  　 |   | 　  ／ 　＼|\n　 .|    |   　 ´　｀  |\n 　(6       　つ  　/　"+user+"\n  　.| 　     / ／⌒⌒ヽ\n  　 |　         ＼   ￣ ノ\n  　  |　　       /￣"
     await message.channel.send(reply)
 
-async def HG(client,message): #大池沼
+async def HG(client,message,vc): #大池沼
     userlist=[]
     for member in message.server.members :
         userlist.append(member.id)
@@ -191,7 +192,7 @@ async def HG(client,message): #大池沼
     reply = "どーもーハードゲイ( <@!"+randuser+"> )で～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼） セイセイセイ・セイセイセイ・セイセイセイセイセイセイセイ（三三七拍子超池沼）ど～も～ハードゲイで～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼）"
     await message.channel.send(reply)
 
-async def walkingdrum(client,message): #歩くドラム缶の恐怖
+async def walkingdrum(client,message,vc): #歩くドラム缶の恐怖
     string = str(message.content)
     string = string[13:]
     if string == "":
@@ -201,7 +202,7 @@ async def walkingdrum(client,message): #歩くドラム缶の恐怖
         reply = "【"+string+"】\n\n　　　 　}二二{\n　　　 　}二二{\n　　 　　}二二{\n  　  　　  /   ／⌒)\n　　　　| ／ /　/\n　　　　ヽ_｜ /\n　　　　  / ｜｜\n　　　　/　(＿＼\n　　　／ ／　 ﾋﾉ\n　　  / ／\n　　`( ｜\n　  　L/"
         await message.channel.send(reply)
 
-async def kodakumi(client,message):
+async def kodakumi(client,message,vc):
     easylist = ["difficult","easy","so easy","very easy","hyper easy","ultra easy"]
     easylevel = str(message.content)
     easylevel = easylevel[10:12]
