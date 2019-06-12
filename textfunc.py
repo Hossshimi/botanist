@@ -85,7 +85,7 @@ async def shutup(client,message,vc): #shut up
 
 
 async def weather(client,message,vc): #weather
-    getweather.get_weather(message.content[9:])
+    await message.channel.send(getweather.get_weather(message.content[9:]))
 
 async def rand(client,message,vc): #random
     text = str(message.content)
