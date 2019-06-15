@@ -185,10 +185,11 @@ async def anagosan(client,message,vc): #ちくしょう
 
 async def HG(client,message,vc): #大池沼
     userlist=[]
-    for member in message.server.members :
-        userlist.append(member.id)
+    for member in message.guild.members :
+        if member.status == "online":
+            userlist.append(member.id)
     randuser = random.choice(userlist)
-    reply = "どーもーハードゲイ( <@!"+randuser+"> )で～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼） セイセイセイ・セイセイセイ・セイセイセイセイセイセイセイ（三三七拍子超池沼）ど～も～ハードゲイで～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼）"
+    reply = "どーもーハードゲイ( <@!"+str(randuser)+"> )で～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼） セイセイセイ・セイセイセイ・セイセイセイセイセイセイセイ（三三七拍子超池沼）ど～も～ハードゲイで～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼）"
     await message.channel.send(reply)
 
 async def walkingdrum(client,message,vc): #歩くドラム缶の恐怖
