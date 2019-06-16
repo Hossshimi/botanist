@@ -1,4 +1,4 @@
-#=====VERSION:4.0.9=====
+#=====VERSION:4.0.13=====
 
 import discord
 import random
@@ -15,7 +15,7 @@ import textfunc as func
 import subprocess
 import datetime
 
-VERSION = "4.0.9"
+VERSION = "4.0.13"
 client = discord.Client()
 t = datetime.datetime.now
 rep_list = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
@@ -99,8 +99,8 @@ async def on_voice_state_update(before, after): #VC参加時にairhorn
 @client.event
 async def on_message(message):
     global pflag,vc_id,vc_list
-    """if message.author == client.user: #自分の発言は無視
-            return"""
+    if message.author == client.user: #自分の発言は無視
+            return
  #--------------重要な制御-------------------------------------
     if message.author.id==311147580715171842 : #管理者権限
         if message.content.startswith(">p"): #pause
@@ -146,10 +146,10 @@ async def on_message(message):
 
  #-----------------------------------------------------------------
     if pflag==False:
-        if message.content.startswith(">test"):
+        """if message.content.startswith(">test"):
             reply = message.author.id
             await client.send_message(message.channel,reply)
-       
+       """
         if str(client.user.id) in message.content: #メンション受けたら
             reply = f"{message.author.mention} {random.choice(rep_list)}"
             await message.channel.send(reply)
