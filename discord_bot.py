@@ -99,8 +99,8 @@ async def on_voice_state_update(before, after): #VC参加時にairhorn
 @client.event
 async def on_message(message):
     global pflag,vc_id,vc_list
-    if message.author == client.user: #自分の発言は無視
-            return
+    """if message.author == client.user: #自分の発言は無視
+            return"""
  #--------------重要な制御-------------------------------------
     if message.author.id==311147580715171842 : #管理者権限
         if message.content.startswith(">p"): #pause
