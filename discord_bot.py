@@ -146,9 +146,9 @@ async def on_message(message):
 
  #-----------------------------------------------------------------
     if pflag==False:
-        """if message.content.startswith(">test"):
+        if message.content.startswith(">test"):
             reply = message.author.id
-            await client.send_message(message.channel,reply)"""
+            await client.send_message(message.channel,reply)
        
         if str(client.user.id) in message.content: #メンション受けたら
             reply = f"{message.author.mention} {random.choice(rep_list)}"
