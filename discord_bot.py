@@ -1,4 +1,4 @@
-#=====VERSION:4.0.15=====
+#=====VERSION:4.1.0=====
 
 import discord
 import random
@@ -15,7 +15,7 @@ import textfunc as func
 import subprocess
 import datetime
 
-VERSION = "4.0.15"
+VERSION = "4.1.0"
 client = discord.Client()
 t = datetime.datetime.now
 rep_list = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
@@ -166,10 +166,11 @@ async def on_message(message):
         #channel = client.get_channel(vc_id)
         #voice = client.voice_client_in(channel.server)
         
-        for f in func_list:
-            if f in str(message.content[1:]):
-                await func_list[f](client,message,vc)
-                break
+        if message.content.startswith(">"):
+            for f in func_list:
+                if f in str(message.content[1:]):
+                    await func_list[f](client,message,vc)
+                    break
             
 
         vccom = message.content
