@@ -87,7 +87,7 @@ async def shutup(client,message,vc): #shut up
 
 
 
-async def honda(message,vc):
+async def honda(client,message,vc):
     await vcfunc(f"honda{str(random.choice([1,2,3]))}",message,vc)
 
 async def weather(client,message,vc): #weather

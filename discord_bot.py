@@ -38,6 +38,7 @@ func_list = {
     "HG" : func.HG,
     "walkingdrum" : func.walkingdrum,
     "kodakumi" : func.kodakumi,
+    "honda" : func.honda
 }
 #vc_id = "317228479416500227" #chikwa
 #vc_id = "392898035090456589" #test server
@@ -171,9 +172,6 @@ async def on_message(message):
                 if f in str(message.content[1:]):
                     await func_list[f](client,message,vc)
                     break
-
-            if "honda" in message.content:
-                await func.honda(message,vc)
             
             vccom = message.content
             vccom = vccom[1:]
