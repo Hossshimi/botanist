@@ -86,6 +86,10 @@ async def shutup(client,message,vc): #shut up
     vc[vc_id].stop()
 
 
+
+async def honda(message,vc):
+    await vcfunc(f"honda{str(random.choice([1,2,3]))}",message,vc)
+
 async def weather(client,message,vc): #weather
     await message.channel.send(getweather.get_weather(message.content[9:]))
 

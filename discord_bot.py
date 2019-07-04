@@ -172,6 +172,9 @@ async def on_message(message):
                     await func_list[f](client,message,vc)
                     break
 
+            if "honda" in message.content:
+                await func.honda(message,vc)
+            
             vccom = message.content
             vccom = vccom[1:]
             if vccom in vc_list:
