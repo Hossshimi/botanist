@@ -31,7 +31,7 @@ def print_weather(data):
     text = text + "Location:" + data["city"]["name"] +"\n"
     count=1
     for wlist in data["list"]:
-        time = datetime.fromtimestamp(int(wlist["dt"]))
+        time = datetime.fromtimestamp(int(wlist["dt"])+32400)
         time = str(time)[5:16]
         #print("time=",time,"raw=",wlist["dt_txt"])
         if count==1 or wlist["dt_txt"][11:13]=="15":

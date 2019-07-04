@@ -171,12 +171,11 @@ async def on_message(message):
                 if f in str(message.content[1:]):
                     await func_list[f](client,message,vc)
                     break
-            
 
-        vccom = message.content
-        vccom = vccom[1:]
-        if vccom in vc_list:
-            await func.vcfunc(vccom, message, vc)
+            vccom = message.content
+            vccom = vccom[1:]
+            if vccom in vc_list:
+                await func.vcfunc(vccom, message, vc)
 
 
         #await f.textfunc_(client, message, vc_id)

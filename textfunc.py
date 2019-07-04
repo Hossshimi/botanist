@@ -70,10 +70,12 @@ async def leave(client,message,vc): #leave vc
     try:
         #if f"vc{vc_id}" in locals():
             await vc[vc_id].disconnect()
-            log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id].name)+"]"
-            await LOG_CHANNEL.send(log)
     except:
-        log = t().strftime("[ %H:%M:%S ] ")+"leave failed"
+        """log = t().strftime("[ %H:%M:%S ] ")+"leave failed"
+        await LOG_CHANNEL.send(log)"""
+        pass
+    finally:
+        log = t().strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id].name)+"]"
         await LOG_CHANNEL.send(log)
 
 async def shutup(client,message,vc): #shut up
