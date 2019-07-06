@@ -1,4 +1,4 @@
-#=====VERSION:4.1.6=====
+#=====VERSION:4.1.7=====
 
 import discord
 import random
@@ -15,14 +15,14 @@ import textfunc as func
 import subprocess
 import datetime
 
-VERSION = "4.1.6"
+VERSION = "4.1.7"
 client = discord.Client()
 t = datetime.datetime.now
 rep_list = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
 vc_list = ["neverdie", "sumanko", "airhorn", "goldrush1", "goldrush2",
             "scream","yarimasunee","kowareruwa","yurusite","soudayo",
             "haha","USSR","roboto","mankoja","jamayaro","oi","ike","dase",
-            "keshigomu","marmelo","saikyou","TF","doko","hujino"]
+            "keshigomu","marmelo","saikyou","TF","doko","hujino","suiso"]
 func_list = {
     "join" : func.join,
     "leave" : func.leave,
