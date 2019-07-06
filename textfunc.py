@@ -6,6 +6,10 @@ import datetime
 import getweather
 t = datetime.datetime.now
 
+from discord.ext import commands
+
+bot = commands.Bot(command_prefix=">")
+
 async def vcfunc(audioname, msg, vc): #音声流すだけ
     #print(t().strftime("[ %H:%M:%S ] "),"start audio function[",audioname,"]...")
     global client
@@ -86,6 +90,18 @@ async def shutup(client,message,vc): #shut up
     vc[vc_id].stop()
 
 
+async def hide(client,message,vc):
+    text = message.content[6:]+" "
+    spl = []
+    for i in range(1000):
+        if text[i:i+1]:
+            spl.append(text[i:i+1])
+        #spl = spl[:i+1]
+        elif text[i:i+1] == None:
+            break
+    hid = "||"+"||||".join(spl)
+    hid = hid[:-3]
+    await message.channel.send(hid)
 
 async def honda(client,message,vc):
     await vcfunc(f"honda{str(random.choice([1,2,3]))}",message,vc)

@@ -1,4 +1,4 @@
-#=====VERSION:4.1.5=====
+#=====VERSION:4.1.6=====
 
 import discord
 import random
@@ -15,7 +15,7 @@ import textfunc as func
 import subprocess
 import datetime
 
-VERSION = "4.1.5"
+VERSION = "4.1.6"
 client = discord.Client()
 t = datetime.datetime.now
 rep_list = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
@@ -38,7 +38,8 @@ func_list = {
     "HG" : func.HG,
     "walkingdrum" : func.walkingdrum,
     "kodakumi" : func.kodakumi,
-    "honda" : func.honda
+    "honda" : func.honda,
+    "hide" : func.hide
 }
 #vc_id = "317228479416500227" #chikwa
 #vc_id = "392898035090456589" #test server
