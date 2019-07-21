@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 
 from PIL import Image, ImageDraw, ImageFont
 
-VERSION = "4.2.6"
+VERSION = "4.2.7"
 client = discord.Client()
 t = datetime.now
 REP_LIST = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
@@ -207,7 +207,7 @@ async def on_message(message):
                     elif message.content.split(" ")[1] == "-imgout":
                         result = FUNC_LIST[f](client,message,vc,outopt="i")
                         imgout(result)
-                        await message.channel.send(file=discord.File(os.path.join(os.path.abspath(__file__), "../tmp/img.jpg")))
+                        await message.channel.send(file=discord.File(os.path.join(os.path.dirname(__file__), "/tmp/img.jpg")))
                     else:
                         result = await FUNC_LIST[f](client,message,vc)
             
