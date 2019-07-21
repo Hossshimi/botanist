@@ -1,4 +1,4 @@
-#=====VERSION:4.2.0=====
+#=====VERSION:4.2.1=====
 
 import discord
 import random
@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 
 from PIL import Image, ImageDraw, ImageFont
 
-VERSION = "4.2.0"
+VERSION = "4.2.1"
 client = discord.Client()
 t = datetime.now
 REP_LIST = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
