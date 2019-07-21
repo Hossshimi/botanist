@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 
 from PIL import Image, ImageDraw, ImageFont
 
-VERSION = "4.2.4"
+VERSION = "4.2.5"
 client = discord.Client()
 t = datetime.now
 REP_LIST = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
@@ -59,7 +59,8 @@ vc_lock = False
 pflag = False
 LOG_CHANNEL = None
 VAR = [None for x in range(100)]
-FONTPATH = os.path.normcase((os.path.join(os.path.dirname(__file__), "/data/VL-Gothic-Regular.ttf")))
+#FONTPATH = os.path.normcase((os.path.join(os.path.dirname(__file__), "/data/VL-Gothic-Regular.ttf")))
+FONTPATH = "/app/data/VL-Gothic-Regular.ttf"
 FONTSIZE = 12
 COLOR = (255,255,255)
 
