@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 
 from PIL import Image, ImageDraw, ImageFont
 
-VERSION = "4.2.5"
+VERSION = "4.2.6"
 client = discord.Client()
 t = datetime.now
 REP_LIST = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
@@ -79,7 +79,7 @@ def imgout(usertext):
     bg_ = Image.new("RGB", (width,height+10), (0,0,0))
     bg = ImageDraw.Draw(bg_)
     bg.multiline_text((0,0), usertext, fill=COLOR, font=font)
-    bg_.save(os.path.join(os.path.abspath(__file__), "../tmp/img.jpg"))
+    bg_.save(os.path.join(os.path.dirname(__file__), "/tmp/img.jpg"))
 
 
 @client.event
