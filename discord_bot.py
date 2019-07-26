@@ -1,4 +1,4 @@
-VERSION = "4.3.2"
+VERSION = "4.3.3"
 
 import discord
 import random
@@ -60,7 +60,7 @@ LOG_CHANNEL = None
 VAR = [None for x in range(100)]
 #FONTPATH = os.path.normcase((os.path.join(os.path.dirname(__file__), "/data/VL-Gothic-Regular.ttf")))
 FONTPATH = "/app/data/VL-Gothic-Regular.ttf"
-FONTSIZE = 12
+FONTSIZE = 20
 COLOR = (255,255,255)
 
 
