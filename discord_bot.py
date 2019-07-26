@@ -1,4 +1,4 @@
-VERSION = "4.2.10"
+VERSION = "4.3.0"
 
 import discord
 import random
@@ -222,4 +222,4 @@ async def on_message(message):
 
 #voice = client.join_voice_channel(client.get_channel("317228479416500227"))
 
-client.run("NTAyNDYzMzUyNzMyMjU0MjA5.XTqLXA.ZJdXQ6gyGDgr4XHsjC-Si0kPgko")
+client.run(os.environ.get("DISCORD_TOKEN"))
