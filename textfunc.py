@@ -117,6 +117,7 @@ def rand(client,message,vc,outopt=None): #random
         text = text[6:]
     elif "vi" in outopt:
         text = outopt[2:]
+        text = text.replace("-imgout ","",1)
     ulist = text.split()
     if ulist[0].startswith("m-"):
         mode = ulist[0]
@@ -152,9 +153,9 @@ def say(client,message,vc,outopt=None): #say
     if outopt == None:
         text = text[5:]
     elif (outopt=="v") or (outopt=="i"):
-        text = text[13:]
+        text = text[5:].replace("-imgout ","",1).replace("-varout ","",1)
     elif "vi" in outopt:
-        text = outopt[2:]
+        text = outopt[2:].replace("-imgout ","",1)
     #if text[:7] == "command":
     #    text = "/" + text[8:]
     #    await client.send_message(message.channel,text)
@@ -191,7 +192,7 @@ def kabaorun(client,message,vc,outopt=None): #精神を加速させろ
     elif outopt == None:
         user = user[10:]
     elif "vi" in outopt:
-        user = outopt[2:]
+        user = outopt[2:].replace("-imgout ","",1)
     if user == "":
         reply = "```  　　　　　　　　　　∩＿∩\n　　　　　　　　　 ／ ＼ ／ ＼\n　　　　　　　　　|  (°)=(°) |\n　　　　　　　　　|　  ●_● 　|\n　　　　　　　　 / 　　   　 ヽ\n　　　　   r⌒  |〃 ------ ヾ |\n　　　　　/　 i／  | _＿二＿＿ノ\n　　　　./　 ／　　/　　　　   ) 　\n　　　 ./ ／　　／　　　　 　/／\n　　　/　　　.／　　　　　/￣\n　　 .ヽ､__.／　　　 ／ ⌒ヽ\n　 　　　　 r　　  ／      |\n　　　　　/　　 　　  　   ﾉ\n　　　　/　　　　 / 　　  /\n　　　./　　　　／/　   ／\n　　 /.　 　.／ ./   ／\n　　i　　　／  ./  ／\n　　i　　./  .ノ.^/\n　　i　 ./  　|_／\n　　i   /\n　／  /\n (_／　精神を加速させろ```"
     else:
@@ -212,7 +213,7 @@ def chikuwa(client,message,vc,outopt=None): #ちくわ
         ckw = ".   \_\_ \_\_\_ \_\_\n(0)  ≡ ≡≡ )\n   ￣￣￣ ￣"
         chikuwa_ext = [" \_ \_\_\_\_\_","  ≡ ≡≡  "," ￣￣ ￣"]
     elif "vi" in outopt:
-        user = outopt[2:]
+        user = outopt[2:].replace("-imgout ","",1)
     if user == "":
         reply = ckw
     elif int(user) <=0:
@@ -232,7 +233,7 @@ def anagosan(client,message,vc,outopt=None): #ちくしょう
     elif outopt == None:
         user = user[10:]
     elif "vi" in outopt:
-        user = outopt[2:]
+        user = outopt[2:].replace("-imgout ","",1)
     if user == "":
         reply = ".　   ／￣⌒⌒ヽ\n  　 |   ／￣￣￣ヽ\n  　 |   | 　  ／ 　＼|\n　 .|    |   　 ´　｀  |\n 　(6       　つ  　/　　ちくしょう・・・\n  　.| 　     / ／⌒⌒ヽ\n  　 |　         ＼   ￣ ノ\n  　  |　　       /￣"
     else:
@@ -255,7 +256,7 @@ def walkingdrum(client,message,vc,outopt=None): #歩くドラム缶の恐怖
     elif outopt == None:
         string = string[13:]
     elif "vi" in outopt:
-        string = outopt[2:]
+        string = outopt[2:].replace("-imgout ","",1)
     if string == "":
         reply = "【歩くドラム缶の恐怖】\n\n　　　 　}二二{\n　　　 　}二二{\n　　 　　}二二{\n  　  　　  /   ／⌒)\n　　　　| ／ /　/\n　　　　ヽ_｜ /\n　　　　  / ｜｜\n　　　　/　(＿＼\n　　　／ ／　 ﾋﾉ\n　　  / ／\n　　`( ｜\n　  　L/"
         return reply
@@ -271,7 +272,7 @@ def kodakumi(client,message,vc,outopt=None):
     elif outopt == None:
         easylevel = easylevel[10:12]
     elif "vi" in outopt:
-        easylevel = int(outopt[2:])
+        easylevel = int(outopt[2:].replace("-imgout ","",1))
     if easylevel == "":
         return "全て投げ出してもいいじゃないの?\nUsed to be 諦めるのは easy"
     elif 0 <= int(easylevel) <= 5:

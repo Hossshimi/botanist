@@ -1,4 +1,4 @@
-VERSION = "4.4.2"
+VERSION = "4.4.3"
 
 import discord
 import random
@@ -62,6 +62,7 @@ VAR = [None for x in range(100)]
 FONTPATH = "/app/data/VL-Gothic-Regular.ttf"
 FONTSIZE = 20
 COLOR = (255,255,255)
+#print(os.environ.get("DISCORD_TOKEN"))
 
 
 
@@ -87,11 +88,13 @@ async def on_ready(): #-------起動時処理-------------
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     print(LOG_CHANNEL)
-    log = (t()+timedelta(hours=9)).strftime("\n[ %H:%M:%S ] ")+"======= Logged in as : " + client.user.name +" "+ VERSION +"============"
+    log = (t()+timedelta(hours=9)).strftime("\n[ %H:%M:%S ] ")+\
+        "======= Logged in as : " + client.user.name +" "+ VERSION +"============"
     await LOG_CHANNEL.send(log)
     try:
         if (sys.argv[1] == "rs"):
-            log = (t()+timedelta(hours=9)).strftime("[ %H:%M:%S ] ")+"+++++++++++++ BOTanist was restarted +++++++++++++"
+            log = (t()+timedelta(hours=9)).strftime("[ %H:%M:%S ] ")+\
+                "+++++++++++++ BOTanist was restarted +++++++++++++"
             await LOG_CHANNEL.send(log)
             channel = client.get_channel(int(sys.argv[2]))
             await channel.send("**RESTARTED!**")
@@ -121,7 +124,7 @@ async def on_voice_state_update(before, after): #VC参加時にairhorn
 
 @client.event
 async def on_message(message):
-    global pflag,vc_id,VC_LIST
+    global pflag,vc_id,VC_LIST,VAR
     if message.author == client.user: #自分の発言は無視
             return
  #--------------重要な制御-------------------------------------
@@ -153,7 +156,8 @@ async def on_message(message):
             await LOG_CHANNEL.send(log)"""
             reply = f"{message.author.mention} Stop bot..."
             await message.channel.send(reply)
-            log = (t()+timedelta(hours=9)).strftime("[ %H:%M:%S ] ")+"+++++++++++++ BOTanist stopped +++++++++++++"
+            log = (t()+timedelta(hours=9)).strftime("[ %H:%M:%S ] ")+\
+                "+++++++++++++ BOTanist stopped +++++++++++++"
             await LOG_CHANNEL.send(log)
             os._exit(0) #終了
             #except: print(t().strftime("[ %H:%M:%S ] "),"stop failed")
@@ -190,26 +194,45 @@ async def on_message(message):
         if message.content.startswith(">"):
             for f in FUNC_LIST:
                 if str(message.content[1:]).startswith(f):
+                    flag = True # judge while True
+                    result = "e"
                     if f in COR_LIST:
                         await FUNC_LIST[f](client,message,vc)
-                    elif "-varin" in message.content.split(" "):
-                        result = FUNC_LIST[f](client,message,vc,outopt=f"vi{VAR[int(message.content.split(' ')[2])]}")
-                    elif "-varout" in message.content.split(" "):
-                        result = FUNC_LIST[f](client,message,vc,outopt="v")
+                        flag = False
+                    if ("-varin" in message.content.split(" ")) and flag:
+                        result = FUNC_LIST[f](client,message,vc,\
+                            outopt=f"vi{VAR[int(message.content.split(' ')[2])]}")
+                        if "-imgout" in message.content.split(" "):
+                            flag = f"vi{result}"
+                        elif "-varout" in message.content.split(" "):
+                            flag = f"vi{result}"
+                        else:
+                            await message.channel.send(result)
+                    if ("-varout" in message.content.split(" ")) and flag:
+                        if str(flag).startswith("vi"):
+                            result = flag[2:]
+                        elif result == "e":
+                            result = FUNC_LIST[f](client,message,vc,outopt="v")
                         for i in range(100):
                             if VAR[i] == None:
                                 VAR[i] = result
-                                await message.channel.send(f"_its var number is :_ **{i}**")
+                                await message.channel.send(f"_its var number is_ : **{i}**")
+                                flag = False
                                 break
                             if i==99:
                                 VAR = [None for x in range(100)]
                                 VAR[0] = result
-                                await message.channel.send("_its var number is :_ **0**")
-                    elif "-imgout" in message.content.split(" "):
-                        result = FUNC_LIST[f](client,message,vc,outopt="i")
+                                await message.channel.send("_its var number is_ : **0**")
+                                flag = False
+                    if ("-imgout" in message.content.split(" ")) and flag:
+                        if str(flag).startswith("vi"):
+                            result = flag[2:]
+                        elif result == "e":
+                            result = FUNC_LIST[f](client,message,vc,outopt="i")
                         imgout(result)
-                        await message.channel.send(file=discord.File(os.path.join(os.path.dirname(__file__), "/tmp/img.jpg")))
-                    else:
+                        await message.channel.send(file=discord.File(\
+                            os.path.join(os.path.dirname(__file__), "/tmp/img.jpg")))
+                    if result == "e":
                         result = FUNC_LIST[f](client,message,vc)
                         await message.channel.send(result)
             
@@ -224,4 +247,5 @@ async def on_message(message):
 
 #voice = client.join_voice_channel(client.get_channel("317228479416500227"))
 
-client.run(os.environ.get("DISCORD_TOKEN"))
+#client.run(os.environ.get("DISCORD_TOKEN"))
+client.run("NTAyNDYzMzUyNzMyMjU0MjA5.XTqmjA.GyT9Ck5QpwaDKOUy4rwBK9ZMNQQ")
