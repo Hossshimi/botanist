@@ -1,4 +1,4 @@
-VERSION = "4.2.8"
+VERSION = "4.2.9"
 
 import discord
 import random
@@ -222,4 +222,4 @@ async def on_message(message):
 
 #voice = client.join_voice_channel(client.get_channel("317228479416500227"))
 
-client.run("NTAyNDYzMzUyNzMyMjU0MjA5.DqoUDA.HXPqz444qrvaA45MZvvnqJRW5EM")
+client.run("NTAyNDYzMzUyNzMyMjU0MjA5.XTqFdw.EFKwtRD6eDJUTfCAzoGzdML81-U")
