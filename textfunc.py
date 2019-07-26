@@ -147,7 +147,10 @@ def rand(client,message,vc,outopt=None): #random
 
 def say(client,message,vc,outopt=None): #say
     text = str(message.content)
-    text = text[5:]
+    if outopt == None:
+        text = text[5:]
+    else:
+        text = text[13:]
     #if text[:7] == "command":
     #    text = "/" + text[8:]
     #    await client.send_message(message.channel,text)
