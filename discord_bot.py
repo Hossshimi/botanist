@@ -1,4 +1,4 @@
-#=====VERSION:4.2.3=====
+VERSION = "4.2.8"
 
 import discord
 import random
@@ -18,7 +18,6 @@ from datetime import datetime, timedelta
 
 from PIL import Image, ImageDraw, ImageFont
 
-VERSION = "4.2.7"
 client = discord.Client()
 t = datetime.now
 REP_LIST = ("ごきげんよう","どちらさまでしょうか？","しらん","帰れ")
@@ -193,7 +192,7 @@ async def on_message(message):
                 if str(message.content[1:]).startswith(f):
                     if f in COR_LIST:
                         await FUNC_LIST[f](client,message,vc)
-                    elif message.content.split(" ")[1] == "-varout":
+                    elif "-varout" in message.content.split(" "):
                         result = FUNC_LIST[f](client,message,vc,outopt="v")
                         for i in range(100):
                             if VAR[i] == None:
@@ -204,12 +203,13 @@ async def on_message(message):
                                 VAR = [None for x in range(100)]
                                 VAR[0] = result
                                 await message.channel.send("its var number is : 0")
-                    elif message.content.split(" ")[1] == "-imgout":
+                    elif "-imgout" in message.content.split(" "):
                         result = FUNC_LIST[f](client,message,vc,outopt="i")
                         imgout(result)
                         await message.channel.send(file=discord.File(os.path.join(os.path.dirname(__file__), "/tmp/img.jpg")))
                     else:
-                        result = await FUNC_LIST[f](client,message,vc)
+                        result = FUNC_LIST[f](client,message,vc)
+                        await message.channel.send(result)
             
             vccom = message.content
             vccom = vccom[1:]
