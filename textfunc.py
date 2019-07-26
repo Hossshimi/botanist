@@ -115,6 +115,8 @@ def rand(client,message,vc,outopt=None): #random
         text = text[14:]
     elif outopt == None:
         text = text[6:]
+    elif "vi" in outopt:
+        text = VAR[int(outopt[2:])]
     ulist = text.split()
     if ulist[0].startswith("m-"):
         mode = ulist[0]
@@ -149,8 +151,10 @@ def say(client,message,vc,outopt=None): #say
     text = str(message.content)
     if outopt == None:
         text = text[5:]
-    else:
+    elif (outopt=="v") or (outopt=="i"):
         text = text[13:]
+    elif "vi" in outopt:
+        text = VAR[int(outopt[2:])]
     #if text[:7] == "command":
     #    text = "/" + text[8:]
     #    await client.send_message(message.channel,text)
@@ -205,6 +209,8 @@ def chikuwa(client,message,vc,outopt=None): #ちくわ
         user = user[9:]
         ckw = ".   \_\_ \_\_\_ \_\_\n(0)  ≡ ≡≡ )\n   ￣￣￣ ￣"
         chikuwa_ext = [" \_ \_\_\_\_\_","  ≡ ≡≡  "," ￣￣ ￣"]
+    elif "vi" in outopt:
+        user = VAR[int(outopt[2:])]
     if user == "":
         reply = ckw
     elif int(user) <=0:
@@ -223,6 +229,8 @@ def anagosan(client,message,vc,outopt=None): #ちくしょう
         user = user[18:]
     elif outopt == None:
         user = user[10:]
+    elif "vi" in outopt:
+        user = VAR[int(outopt[2:])]
     if user == "":
         reply = ".　   ／￣⌒⌒ヽ\n  　 |   ／￣￣￣ヽ\n  　 |   | 　  ／ 　＼|\n　 .|    |   　 ´　｀  |\n 　(6       　つ  　/　　ちくしょう・・・\n  　.| 　     / ／⌒⌒ヽ\n  　 |　         ＼   ￣ ノ\n  　  |　　       /￣"
     else:
@@ -244,6 +252,8 @@ def walkingdrum(client,message,vc,outopt=None): #歩くドラム缶の恐怖
         string = string[21:]
     elif outopt == None:
         string = string[13:]
+    elif "vi" in outopt:
+        string = VAR[int(outopt[2:])]
     if string == "":
         reply = "【歩くドラム缶の恐怖】\n\n　　　 　}二二{\n　　　 　}二二{\n　　 　　}二二{\n  　  　　  /   ／⌒)\n　　　　| ／ /　/\n　　　　ヽ_｜ /\n　　　　  / ｜｜\n　　　　/　(＿＼\n　　　／ ／　 ﾋﾉ\n　　  / ／\n　　`( ｜\n　  　L/"
         return reply
@@ -258,6 +268,8 @@ def kodakumi(client,message,vc,outopt=None):
         easylevel = easylevel[18:20]
     elif outopt == None:
         easylevel = easylevel[10:12]
+    elif "vi" in outopt:
+        easylevel = VAR[int(outopt[2:])]
     if easylevel == "":
         return "全て投げ出してもいいじゃないの?\nUsed to be 諦めるのは easy"
     elif 0 <= int(easylevel) <= 5:

@@ -1,4 +1,4 @@
-VERSION = "4.3.3"
+VERSION = "4.4.0"
 
 import discord
 import random
@@ -192,17 +192,19 @@ async def on_message(message):
                 if str(message.content[1:]).startswith(f):
                     if f in COR_LIST:
                         await FUNC_LIST[f](client,message,vc)
+                    elif "-varin" in message.content.split(" "):
+                        result = FUNC_LIST[f](client,message,vc,outopt=f"vi{message.content.split(' ')[2]}")
                     elif "-varout" in message.content.split(" "):
                         result = FUNC_LIST[f](client,message,vc,outopt="v")
                         for i in range(100):
                             if VAR[i] == None:
                                 VAR[i] = result
-                                await message.channel.send(f"its var number is : {i}")
+                                await message.channel.send(f"_its var number is :_ **{i}**")
                                 break
                             if i==99:
                                 VAR = [None for x in range(100)]
                                 VAR[0] = result
-                                await message.channel.send("its var number is : 0")
+                                await message.channel.send("_its var number is :_ **0**")
                     elif "-imgout" in message.content.split(" "):
                         result = FUNC_LIST[f](client,message,vc,outopt="i")
                         imgout(result)
