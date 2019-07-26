@@ -110,6 +110,7 @@ def weather(client,message,vc,outopt=None): #weather
     return getweather.get_weather(loc)
 
 def rand(client,message,vc,outopt=None): #random
+    global VAR
     text = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         text = text[14:]
@@ -148,6 +149,7 @@ def rand(client,message,vc,outopt=None): #random
 
 
 def say(client,message,vc,outopt=None): #say
+    global VAR
     text = str(message.content)
     if outopt == None:
         text = text[5:]
@@ -185,6 +187,7 @@ def help(client,message,vc,outopt=None): #help--------------------------------
     return reply
 
 def kabaorun(client,message,vc,outopt=None): #精神を加速させろ
+    global VAR
     user = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         user = user[18:]
@@ -200,6 +203,7 @@ def kabaorun(client,message,vc,outopt=None): #精神を加速させろ
         return reply
 
 def chikuwa(client,message,vc,outopt=None): #ちくわ
+    global VAR
     user = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         user = user[17:]
@@ -224,6 +228,7 @@ def chikuwa(client,message,vc,outopt=None): #ちくわ
     return reply
 
 def anagosan(client,message,vc,outopt=None): #ちくしょう
+    global VAR
     user = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         user = user[18:]
@@ -247,6 +252,7 @@ def HG(client,message,vc,outopt=None): #大池沼
     return reply
 
 def walkingdrum(client,message,vc,outopt=None): #歩くドラム缶の恐怖
+    global VAR
     string = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         string = string[21:]
@@ -262,6 +268,7 @@ def walkingdrum(client,message,vc,outopt=None): #歩くドラム缶の恐怖
         return reply
 
 def kodakumi(client,message,vc,outopt=None):
+    global VAR
     easylist = ["difficult","easy","so easy","very easy","hyper easy","ultra easy"]
     easylevel = str(message.content)
     if (outopt == "v") or (outopt == "i"):
