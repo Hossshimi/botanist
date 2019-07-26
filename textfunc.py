@@ -110,14 +110,13 @@ def weather(client,message,vc,outopt=None): #weather
     return getweather.get_weather(loc)
 
 def rand(client,message,vc,outopt=None): #random
-    global VAR
     text = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         text = text[14:]
     elif outopt == None:
         text = text[6:]
     elif "vi" in outopt:
-        text = VAR[int(outopt[2:])]
+        text = outopt[2:]
     ulist = text.split()
     if ulist[0].startswith("m-"):
         mode = ulist[0]
@@ -149,14 +148,13 @@ def rand(client,message,vc,outopt=None): #random
 
 
 def say(client,message,vc,outopt=None): #say
-    global VAR
     text = str(message.content)
     if outopt == None:
         text = text[5:]
     elif (outopt=="v") or (outopt=="i"):
         text = text[13:]
     elif "vi" in outopt:
-        text = VAR[int(outopt[2:])]
+        text = outopt[2:]
     #if text[:7] == "command":
     #    text = "/" + text[8:]
     #    await client.send_message(message.channel,text)
@@ -187,12 +185,13 @@ def help(client,message,vc,outopt=None): #help--------------------------------
     return reply
 
 def kabaorun(client,message,vc,outopt=None): #精神を加速させろ
-    global VAR
     user = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         user = user[18:]
     elif outopt == None:
         user = user[10:]
+    elif "vi" in outopt:
+        user = outopt[2:]
     if user == "":
         reply = "```  　　　　　　　　　　∩＿∩\n　　　　　　　　　 ／ ＼ ／ ＼\n　　　　　　　　　|  (°)=(°) |\n　　　　　　　　　|　  ●_● 　|\n　　　　　　　　 / 　　   　 ヽ\n　　　　   r⌒  |〃 ------ ヾ |\n　　　　　/　 i／  | _＿二＿＿ノ\n　　　　./　 ／　　/　　　　   ) 　\n　　　 ./ ／　　／　　　　 　/／\n　　　/　　　.／　　　　　/￣\n　　 .ヽ､__.／　　　 ／ ⌒ヽ\n　 　　　　 r　　  ／      |\n　　　　　/　　 　　  　   ﾉ\n　　　　/　　　　 / 　　  /\n　　　./　　　　／/　   ／\n　　 /.　 　.／ ./   ／\n　　i　　　／  ./  ／\n　　i　　./  .ノ.^/\n　　i　 ./  　|_／\n　　i   /\n　／  /\n (_／　精神を加速させろ```"
     else:
@@ -203,7 +202,6 @@ def kabaorun(client,message,vc,outopt=None): #精神を加速させろ
         return reply
 
 def chikuwa(client,message,vc,outopt=None): #ちくわ
-    global VAR
     user = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         user = user[17:]
@@ -214,7 +212,7 @@ def chikuwa(client,message,vc,outopt=None): #ちくわ
         ckw = ".   \_\_ \_\_\_ \_\_\n(0)  ≡ ≡≡ )\n   ￣￣￣ ￣"
         chikuwa_ext = [" \_ \_\_\_\_\_","  ≡ ≡≡  "," ￣￣ ￣"]
     elif "vi" in outopt:
-        user = VAR[int(outopt[2:])]
+        user = outopt[2:]
     if user == "":
         reply = ckw
     elif int(user) <=0:
@@ -228,14 +226,13 @@ def chikuwa(client,message,vc,outopt=None): #ちくわ
     return reply
 
 def anagosan(client,message,vc,outopt=None): #ちくしょう
-    global VAR
     user = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         user = user[18:]
     elif outopt == None:
         user = user[10:]
     elif "vi" in outopt:
-        user = VAR[int(outopt[2:])]
+        user = outopt[2:]
     if user == "":
         reply = ".　   ／￣⌒⌒ヽ\n  　 |   ／￣￣￣ヽ\n  　 |   | 　  ／ 　＼|\n　 .|    |   　 ´　｀  |\n 　(6       　つ  　/　　ちくしょう・・・\n  　.| 　     / ／⌒⌒ヽ\n  　 |　         ＼   ￣ ノ\n  　  |　　       /￣"
     else:
@@ -252,14 +249,13 @@ def HG(client,message,vc,outopt=None): #大池沼
     return reply
 
 def walkingdrum(client,message,vc,outopt=None): #歩くドラム缶の恐怖
-    global VAR
     string = str(message.content)
     if (outopt == "v") or (outopt == "i"):
         string = string[21:]
     elif outopt == None:
         string = string[13:]
     elif "vi" in outopt:
-        string = VAR[int(outopt[2:])]
+        string = outopt[2:]
     if string == "":
         reply = "【歩くドラム缶の恐怖】\n\n　　　 　}二二{\n　　　 　}二二{\n　　 　　}二二{\n  　  　　  /   ／⌒)\n　　　　| ／ /　/\n　　　　ヽ_｜ /\n　　　　  / ｜｜\n　　　　/　(＿＼\n　　　／ ／　 ﾋﾉ\n　　  / ／\n　　`( ｜\n　  　L/"
         return reply
@@ -268,7 +264,6 @@ def walkingdrum(client,message,vc,outopt=None): #歩くドラム缶の恐怖
         return reply
 
 def kodakumi(client,message,vc,outopt=None):
-    global VAR
     easylist = ["difficult","easy","so easy","very easy","hyper easy","ultra easy"]
     easylevel = str(message.content)
     if (outopt == "v") or (outopt == "i"):
@@ -276,7 +271,7 @@ def kodakumi(client,message,vc,outopt=None):
     elif outopt == None:
         easylevel = easylevel[10:12]
     elif "vi" in outopt:
-        easylevel = VAR[int(outopt[2:])]
+        easylevel = int(outopt[2:])
     if easylevel == "":
         return "全て投げ出してもいいじゃないの?\nUsed to be 諦めるのは easy"
     elif 0 <= int(easylevel) <= 5:

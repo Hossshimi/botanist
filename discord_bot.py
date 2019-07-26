@@ -1,4 +1,4 @@
-VERSION = "4.4.1"
+VERSION = "4.4.2"
 
 import discord
 import random
@@ -193,7 +193,7 @@ async def on_message(message):
                     if f in COR_LIST:
                         await FUNC_LIST[f](client,message,vc)
                     elif "-varin" in message.content.split(" "):
-                        result = FUNC_LIST[f](client,message,vc,outopt=f"vi{message.content.split(' ')[2]}")
+                        result = FUNC_LIST[f](client,message,vc,outopt=f"vi{VAR[int(message.content.split(' ')[2])]}")
                     elif "-varout" in message.content.split(" "):
                         result = FUNC_LIST[f](client,message,vc,outopt="v")
                         for i in range(100):
