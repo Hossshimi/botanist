@@ -1,4 +1,4 @@
-VERSION = "4.3.0"
+VERSION = "4.3.1"
 
 import discord
 import random
@@ -45,7 +45,7 @@ FUNC_LIST = {
     "honda" : func.honda,
     "hide" : func.hide
 }
-COR_LIST = ["join","leave","honda"]
+COR_LIST = ["join","leave","honda","nick"]
 #vc_id = "317228479416500227" #chikwa
 #vc_id = "392898035090456589" #test server
 """for c in client.get_all_channels():
