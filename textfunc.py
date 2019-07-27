@@ -259,10 +259,16 @@ def walkingdrum(client,message,vc,outopt=None): #歩くドラム缶の恐怖
         string = outopt[2:].replace("-imgout ","",1)
     if string == "":
         reply = "【歩くドラム缶の恐怖】\n\n　　　 　}二二{\n　　　 　}二二{\n　　 　　}二二{\n  　  　　  /   ／⌒)\n　　　　| ／ /　/\n　　　　ヽ_｜ /\n　　　　  / ｜｜\n　　　　/　(＿＼\n　　　／ ／　 ﾋﾉ\n　　  / ／\n　　`( ｜\n　  　L/"
-        return reply
+        if outopt == "i":
+            return reply[:54]+reply[56:]
+        else:
+            return reply
     else:
         reply = "【"+string+"】\n\n　　　 　}二二{\n　　　 　}二二{\n　　 　　}二二{\n  　  　　  /   ／⌒)\n　　　　| ／ /　/\n　　　　ヽ_｜ /\n　　　　  / ｜｜\n　　　　/　(＿＼\n　　　／ ／　 ﾋﾉ\n　　  / ／\n　　`( ｜\n　  　L/"
-        return reply
+        if outopt == "i":
+            return reply[:54-9+len(string)]+reply[56-9+len(string):]
+        else:
+            return reply
 
 def kodakumi(client,message,vc,outopt=None):
     easylist = ["difficult","easy","so easy","very easy","hyper easy","ultra easy"]

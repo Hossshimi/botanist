@@ -1,4 +1,4 @@
-VERSION = "4.4.4"
+VERSION = "4.4.5"
 
 import discord
 import random
@@ -87,7 +87,9 @@ async def on_ready(): #-------起動時処理-------------
     global LOG_CHANNEL
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
-    print(LOG_CHANNEL)
+    if LOG_CHANNEL.guild.me.display_name != ("BOTanist "+VERSION):
+        LOG_CHANNEL.guild.me.edit(nick="BOTanist "+VERSION)
+    #print(LOG_CHANNEL)
     log = (t()+timedelta(hours=9)).strftime("\n[ %H:%M:%S ] ")+\
         "======= Logged in as : " + client.user.name +" "+ VERSION +"============"
     await LOG_CHANNEL.send(log)
@@ -199,6 +201,7 @@ async def on_message(message):
                     if f in COR_LIST:
                         await FUNC_LIST[f](client,message,vc)
                         flag = False
+                        result = ""
                     if ("-varin" in message.content.split(" ")) and flag:
                         result = FUNC_LIST[f](client,message,vc,\
                             outopt=f"vi{VAR[int(message.content.split(' ')[2])]}")
