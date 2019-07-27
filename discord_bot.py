@@ -1,4 +1,4 @@
-VERSION = "4.4.5"
+VERSION = "4.4.6"
 
 import discord
 import random
@@ -73,7 +73,7 @@ def getpath(rpath):
 
 def imgout(usertext):
     global FONTPATH,FONTSIZE,COLOR
-    print(FONTPATH)
+    #print(FONTPATH)
     font = ImageFont.truetype(FONTPATH,FONTSIZE)
     width, height = font.getsize_multiline(usertext)
     bg_ = Image.new("RGB", (width,height+10), (0,0,0))
@@ -88,7 +88,7 @@ async def on_ready(): #-------起動時処理-------------
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     if LOG_CHANNEL.guild.me.display_name != ("BOTanist "+VERSION):
-        LOG_CHANNEL.guild.me.edit(nick="BOTanist "+VERSION)
+        await LOG_CHANNEL.guild.me.edit(nick="BOTanist "+VERSION)
     #print(LOG_CHANNEL)
     log = (t()+timedelta(hours=9)).strftime("\n[ %H:%M:%S ] ")+\
         "======= Logged in as : " + client.user.name +" "+ VERSION +"============"
@@ -204,7 +204,7 @@ async def on_message(message):
                         result = ""
                     if ("-varin" in message.content.split(" ")) and flag:
                         result = FUNC_LIST[f](client,message,vc,\
-                            outopt=f"vi{VAR[int(message.content.split(' ')[2])]}")
+                            inopt=VAR[ int(message.content.split(' ')[2]) ])
                         if "-imgout" in message.content.split(" "):
                             flag = f"vi{result}"
                         elif "-varout" in message.content.split(" "):
