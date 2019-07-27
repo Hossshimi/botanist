@@ -1,4 +1,4 @@
-VERSION = "4.4.6"
+VERSION = "4.4.7"
 
 import discord
 import random
@@ -206,8 +206,12 @@ async def on_message(message):
                         result = FUNC_LIST[f](client,message,vc,\
                             inopt=VAR[ int(message.content.split(' ')[2]) ])
                         if "-imgout" in message.content.split(" "):
+                            result = FUNC_LIST[f](client,message,vc,\
+                                inopt=VAR[int(message.content.split(' ')[2])],outopt="i")
                             flag = f"vi{result}"
                         elif "-varout" in message.content.split(" "):
+                            result = FUNC_LIST[f](client,message,vc,\
+                                inopt=VAR[int(message.content.split(' ')[2])],outopt="v")
                             flag = f"vi{result}"
                         else:
                             await message.channel.send(result)
