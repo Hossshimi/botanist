@@ -1,4 +1,4 @@
-VERSION = "4.4.7"
+VERSION = "4.4.8"
 
 import discord
 import random
@@ -186,8 +186,18 @@ async def on_message(message):
         if ("used to be" in message.content) or ("Used to be" in message.content):
             reply = '諦めるのは easy'
             await message.channel.send(reply)
+        
+        if message.content == ">vars":
+            reply = "```"
+            for v in VAR:
+                if v:
+                    reply += (str(v)+"\n")
+                else:
+                    break
+            reply += "```"
+            await message.channel.send(reply)
 
-        global player,airhorn_flag,vc_lock,VAR,FONTPATH,FUNC_LIST
+        global player,airhorn_flag,vc_lock,FONTPATH,FUNC_LIST
         #vc_id = "317228479416500227" #chikwa
         #old_id = ""
         #channel = client.get_channel(vc_id)
