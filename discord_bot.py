@@ -1,4 +1,4 @@
-VERSION = "4.4.8"
+VERSION = "4.4.9"
 
 import discord
 import random
@@ -189,9 +189,9 @@ async def on_message(message):
         
         if message.content == ">vars":
             reply = "```"
-            for v in VAR:
+            for v,i in enumerate(VAR):
                 if v:
-                    reply += (str(v)+"\n")
+                    reply += (f"{str(i)} : "+str(v)+"\n")
                 else:
                     break
             reply += "```"
