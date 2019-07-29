@@ -1,4 +1,4 @@
-VERSION = "4.4.11"
+VERSION = "4.5.0"
 
 import discord
 import random
@@ -43,7 +43,8 @@ FUNC_LIST = {
     "walkingdrum" : func.walkingdrum,
     "kodakumi" : func.kodakumi,
     "honda" : func.honda,
-    "hide" : func.hide
+    "hide" : func.hide,
+    "usr" : func.usr
 }
 COR_LIST = ["join","leave","honda","nick"]
 #vc_id = "317228479416500227" #chikwa
