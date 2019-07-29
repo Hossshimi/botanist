@@ -100,7 +100,10 @@ async def hide(client,message,vc,inopt=None,outopt=None):
     return hid
 
 async def honda(client,message,vc,inopt=None,outopt=None):
-    await vcfunc(f"honda{str(random.choice([1,2,3]))}",message,vc)
+    if "-win" in message.content:
+        await vcfunc("honda-win",message,vc)
+    else:
+        await vcfunc(f"honda{str(random.choice([1,2,3]))}",message,vc)
 
 def weather(client,message,vc,inopt=None,outopt=None): #weather
     if (outopt == "v") or (outopt == "i"):
