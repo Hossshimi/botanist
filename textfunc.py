@@ -90,7 +90,7 @@ async def shutup(client,message,vc,inopt=None,outopt=None): #shut up
     vc[vc_id].stop()
 
 def usr(client,message,vc,inopt=None,outopt=None):
-    return "<@" + message.content + ">"
+    return "<@" + message.content[5:] + ">"
 
 async def hide(client,message,vc,inopt=None,outopt=None):
     if (outopt == "v") or (outopt == "i"):
