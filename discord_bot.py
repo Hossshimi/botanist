@@ -1,4 +1,4 @@
-VERSION = "4.6.2"
+VERSION = "4.6.3"
 
 import discord
 import random
