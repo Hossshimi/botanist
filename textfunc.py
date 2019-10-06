@@ -15,7 +15,10 @@ async def vcfunc(audioname, msg, vc): #音声流すだけ
     global client
     audiofname = r"../sounds//" + audioname + ".mp3"
     audio_path = os.path.normpath(os.path.join(os.path.abspath(__file__),audiofname))
-    vc_id = msg.author.voice.channel.id
+    if msg.content[-18:-2].isdecimal():
+        vc_id = int(msg.content[-18:-2])
+    else:
+        vc_id = msg.author.voice.channel.id
     if vc[vc_id].is_playing():
         vc[vc_id].stop()
     channel = msg.author.voice.channel
