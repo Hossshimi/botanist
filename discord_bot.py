@@ -1,4 +1,4 @@
-VERSION = "4.6.0"
+VERSION = "4.6.1"
 
 import discord
 import random
@@ -255,7 +255,10 @@ async def on_message(message):
                         await message.channel.send(result)
             
             vccom = message.content
-            vccom = vccom[1:]
+            if len(vccom) > 20:
+                vccom = vccom[1:-19]
+            else:
+                vccom = vccom[1:]
             if vccom in VC_LIST:
                 await func.vcfunc(vccom, message, vc)
 
