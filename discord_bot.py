@@ -1,4 +1,4 @@
-VERSION = "4.6.1"
+VERSION = "4.6.2"
 
 import discord
 import random
@@ -256,7 +256,7 @@ async def on_message(message):
             
             vccom = message.content
             if len(vccom) > 20:
-                vccom = vccom[1:-19]
+                vccom = vccom[1:-23]
             else:
                 vccom = vccom[1:]
             if vccom in VC_LIST:
