@@ -29,7 +29,8 @@ VC_LIST = ["neverdie", "sumanko", "airhorn", "goldrush1", "goldrush2",
             "yoneken","muscle","sidechest","ikerune","naniwo","oatumari",
             "ohayou","shakaijin","sizukani","subarasii","tanosikatta",
             "uttaemasu","edmfaq","faq","kobuside","mouowatta","osikko",
-            "we","yuunou","daisuki","gomenna","kottikara","naraomae"]
+            "we","yuunou","daisuki","gomenna","kottikara","naraomae",
+            "faqfaq","faaq","ruready","countdown"]
 FUNC_LIST = {
     "join" : func.join,
     "leave" : func.leave,
