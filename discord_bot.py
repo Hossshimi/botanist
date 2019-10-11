@@ -1,4 +1,4 @@
-VERSION = "4.6.3"
+VERSION = "4.6.4"
 
 import discord
 import random
@@ -138,7 +138,7 @@ async def on_message(message):
             return
  #--------------重要な制御-------------------------------------
     if message.author.id==311147580715171842 : #管理者権限
-        if message.content.startswith(">p"): #pause
+        if message.content == ">p": #pause
             if pflag: pass
             else:
                 pflag = True
