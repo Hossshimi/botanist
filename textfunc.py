@@ -8,11 +8,11 @@ t = datetime.now
 
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix=">")
+vc = {}
 
-async def vcfunc(audioname, msg, vc): #音声流すだけ
+async def vcfunc(audioname, msg): #音声流すだけ
     #print(t().strftime("[ %H:%M:%S ] "),"start audio function[",audioname,"]...")
-    global client
+    global client,vc
     audiofname = r"../sounds//" + audioname + ".mp3"
     audio_path = os.path.normpath(os.path.join(os.path.abspath(__file__),audiofname))
     if msg.content[-20:-2].isdecimal():
@@ -28,33 +28,9 @@ async def vcfunc(audioname, msg, vc): #音声流すだけ
         pass
     finally:
         vc[vc_id].play(discord.FFmpegPCMAudio(audio_path))
-    #player = player[vc_id]
-    #print(t().strftime("[ %H:%M:%S ] "),"finish audio function[",audioname,"]")
 
-
-#async def textfunc_(client, message, vc_id):
-#    global rep_list
-    #======== Text Channel ==============================================================
-"""if message.content.startswith(">channel"): #change voice channel
-    user = message.content
-    user = user[:10]
-    if user == "chikuwa":
-        vc_id = "317228479416500227"
-        old_id = "392898035090456589"
-    elif user == "test":
-        vc_id = "392898035090456589"
-        old_id = "317228479416500227"
-    channel = client.get_channel(vc_id)
-    channel_old = client.get_channel(old_id)
-    voice = client.voice_client_in(channel_old.server)
-    await voice.disconnect()
-    await client.join_voice_channel(channel)"""
-
-    #if message.content.startswith(">donotstop"): #止まるんじゃねえぞ
-    #    vc_lock = False
-
-async def join(client,message,vc,inopt=None,outopt=None): #join vc
-    global vc_id,airhorn_flag
+async def join(client,message,inopt=None,outopt=None): #join vc
+    global vc_id,vc
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     if message.author.voice.channel == None:
@@ -62,40 +38,38 @@ async def join(client,message,vc,inopt=None,outopt=None): #join vc
     else:
         vc_id = message.author.voice.channel.id
         channel = client.get_channel(vc_id)
-        airhorn_flag = False
+        #airhorn_flag = False
         vc[vc_id] = await channel.connect()
         log = (t()+timedelta(hours=9)).strftime("[ %H:%M:%S ] ")+"join vc["+str(channel)+"]"
         await LOG_CHANNEL.send(log)
         #airhorn_flag = True
 
-async def leave(client,message,vc,inopt=None,outopt=None): #leave vc
+async def leave(client,message,inopt=None,outopt=None): #leave vc
+    global vc
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
+    vc_id = message.author.voice.channel.id
     try:
-        vc_id = message.author.voice.channel.id
-    except: pass
-    try:
-        #if f"vc{vc_id}" in locals():
-            await vc[vc_id].disconnect()
-    except:
-        """log = t().strftime("[ %H:%M:%S ] ")+"leave failed"
-        await LOG_CHANNEL.send(log)"""
-        pass
-    finally:
-        log = (t()+timedelta(hours=9)).strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id].name)+"]"
+        await vc[vc_id].disconnect()
+        log = (t()+timedelta(hours=9)).strftime("[ %H:%M:%S ] ")+"leave vc["+str(vc[vc_id].channel.name)+"]"
         await LOG_CHANNEL.send(log)
+    except Exception as e:
+        log = t().strftime("[ %H:%M:%S ] ")+"leave failed"
+        await LOG_CHANNEL.send(log)
+        print(e)
 
-async def shutup(client,message,vc,inopt=None,outopt=None): #shut up
+async def shutup(client,message,inopt=None,outopt=None): #shut up
+    global vc
     vc_id = message.author.voice.channel.id
     #channel = client.get_channel(vc_id)
     #voice = client.voice_client_in(channel.server)
     #player = player[vc_id]
     vc[vc_id].stop()
 
-def usr(client,message,vc,inopt=None,outopt=None):
+def usr(client,message,inopt=None,outopt=None):
     return "<@" + message.content[5:] + ">"
 
-async def hide(client,message,vc,inopt=None,outopt=None):
+async def hide(client,message,inopt=None,outopt=None):
     if (outopt == "v") or (outopt == "i"):
         text = message.content[14:]
     elif outopt == None:
@@ -104,20 +78,20 @@ async def hide(client,message,vc,inopt=None,outopt=None):
     #hid = hid[:-3]
     return hid
 
-async def honda(client,message,vc,inopt=None,outopt=None):
+async def honda(client,message,inopt=None,outopt=None):
     if "-win" in message.content:
-        await vcfunc("honda-win",message,vc)
+        await vcfunc("honda-win",message)
     else:
-        await vcfunc(f"honda{str(random.choice([1,2,3]))}",message,vc)
+        await vcfunc(f"honda{str(random.choice([1,2,3]))}",message)
 
-def weather(client,message,vc,inopt=None,outopt=None): #weather
+def weather(client,message,inopt=None,outopt=None): #weather
     if (outopt == "v") or (outopt == "i"):
         loc = message.content[17:]
     elif outopt == None:
         loc = message.content[9:]
     return getweather.get_weather(loc)
 
-def rand(client,message,vc,inopt=None,outopt=None): #random
+def rand(client,message,inopt=None,outopt=None): #random
     text = str(message.content)
     if inopt:
         text = inopt
@@ -156,7 +130,7 @@ def rand(client,message,vc,inopt=None,outopt=None): #random
     return result
 
 
-def say(client,message,vc,inopt=None,outopt=None): #say
+def say(client,message,inopt=None,outopt=None): #say
     text = str(message.content)
     if inopt:
         text = inopt.replace("-imgout ","",1)
@@ -166,7 +140,7 @@ def say(client,message,vc,inopt=None,outopt=None): #say
         text = text[5:].replace("-imgout ","",1).replace("-varout ","",1)
     return text
 
-async def nick(client,message,vc,inopt=None,outopt=None): #change nick
+async def nick(client,message,inopt=None,outopt=None): #change nick
     if message.author.id == 311147580715171842 :
         nick = str(message.content)
         nick = nick[6:]
@@ -177,7 +151,7 @@ async def nick(client,message,vc,inopt=None,outopt=None): #change nick
         reply = f"{message.author.mention} Err:you don't have permission"
         await message.channel.send(reply)
 
-def help(client,message,vc,inopt=None,outopt=None): #help--------------------------------
+def help(client,message,inopt=None,outopt=None): #help--------------------------------
     fmt = "{0:<12}: {1}"
     commands_path = os.path.normpath(os.path.join(os.path.abspath(__file__),r"../data/helplist.json"))
     commands_open = open(commands_path,"r",encoding="utf-8-sig")
@@ -189,7 +163,7 @@ def help(client,message,vc,inopt=None,outopt=None): #help-----------------------
     reply = reply + "``` https://bot-anist.hatenablog.com/"
     return reply
 
-def kabaorun(client,message,vc,inopt=None,outopt=None): #精神を加速させろ
+def kabaorun(client,message,inopt=None,outopt=None): #精神を加速させろ
     user = str(message.content)
     if inopt:
         user = inopt.replace("-imgout ","",1)
@@ -206,7 +180,7 @@ def kabaorun(client,message,vc,inopt=None,outopt=None): #精神を加速させ�
     else:
         return reply
 
-def chikuwa(client,message,vc,inopt=None,outopt=None): #ちくわ
+def chikuwa(client,message,inopt=None,outopt=None): #ちくわ
     user = str(message.content)
     if inopt:
         user = inopt.replace("-imgout ","",1)
@@ -230,7 +204,7 @@ def chikuwa(client,message,vc,inopt=None,outopt=None): #ちくわ
             reply = ".   \_\_ \_\_\_ \_\_" + chikuwa_ext[0]*user +"\n(0) ≡ ≡≡ " + chikuwa_ext[1]*user + ")\n   ￣￣￣" + chikuwa_ext[2]*user
     return reply
 
-def anagosan(client,message,vc,inopt=None,outopt=None): #ちくしょう
+def anagosan(client,message,inopt=None,outopt=None): #ちくしょう
     user = str(message.content)
     if "vi" in outopt:
         user = inopt.replace("-imgout ","",1)
@@ -244,7 +218,7 @@ def anagosan(client,message,vc,inopt=None,outopt=None): #ちくしょう
         reply = ".　   ／￣⌒⌒ヽ\n  　 |   ／￣￣￣ヽ\n  　 |   | 　  ／ 　＼|\n　 .|    |   　 ´　｀  |\n 　(6       　つ  　/　"+user+"\n  　.| 　     / ／⌒⌒ヽ\n  　 |　         ＼   ￣ ノ\n  　  |　　       /￣"
     return reply
 
-def HG(client,message,vc,inopt=None,outopt=None): #大池沼
+def HG(client,message,inopt=None,outopt=None): #大池沼
     userlist=[]
     for member in message.guild.members :
         if str(member.status) == "online":
@@ -253,7 +227,7 @@ def HG(client,message,vc,inopt=None,outopt=None): #大池沼
     reply = "どーもーハードゲイ( <@!"+str(randuser)+"> )で～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼） セイセイセイ・セイセイセイ・セイセイセイセイセイセイセイ（三三七拍子超池沼）ど～も～ハードゲイで～～～す（池沼） フォォォォォォォォォォォォォ！！！（大池沼）"
     return reply
 
-def walkingdrum(client,message,vc,inopt=None,outopt=None): #歩くドラム缶の恐怖
+def walkingdrum(client,message,inopt=None,outopt=None): #歩くドラム缶の恐怖
     string = str(message.content)
     if inopt:
         string = inopt.replace("-imgout ","",1)
@@ -274,7 +248,7 @@ def walkingdrum(client,message,vc,inopt=None,outopt=None): #歩くドラム缶�
         else:
             return reply
 
-def kodakumi(client,message,vc,inopt=None,outopt=None):
+def kodakumi(client,message,inopt=None,outopt=None):
     easylist = ["difficult","easy","so easy","very easy","hyper easy","ultra easy"]
     easylevel = str(message.content)
     if inopt:

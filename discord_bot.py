@@ -1,4 +1,4 @@
-VERSION = "4.6.4"
+VERSION = "4.6.5"
 
 import discord
 import random
@@ -59,7 +59,6 @@ COR_LIST = ["join","leave","honda","nick"]
     print(c.name)"""
 vc_id = None
 player = {}
-vc = {}
 airhorn_flag = False
 vc_lock = False
 pflag = False
@@ -144,7 +143,7 @@ async def on_message(message):
                 pflag = True
                 log = (t()+timedelta(hours=9)).strftime("[ %H:%M:%S ] ")+"----- paused -----"
                 await LOG_CHANNEL.send(log)
-        if message.content.startswith(">rsm"): #resume
+        if message.content == ">rsm": #resume
             if (not pflag): pass
             else:
                 pflag = False
@@ -213,21 +212,21 @@ async def on_message(message):
         if message.content.startswith(">"):
             for f in FUNC_LIST:
                 if str(message.content[1:]).startswith(f):
-                    flag = True # judge while True
+                    flag = True
                     result = "e"
                     if f in COR_LIST:
-                        await FUNC_LIST[f](client,message,vc)
+                        await FUNC_LIST[f](client,message)
                         flag = False
                         result = ""
                     if ("-varin" in message.content.split(" ")) and flag:
-                        result = FUNC_LIST[f](client,message,vc,\
+                        result = FUNC_LIST[f](client,message,\
                             inopt=VAR[ int(message.content.split(' ')[2]) ])
                         if "-imgout" in message.content.split(" "):
-                            result = FUNC_LIST[f](client,message,vc,\
+                            result = FUNC_LIST[f](client,message,\
                                 inopt=VAR[int(message.content.split(' ')[2])],outopt="i")
                             flag = f"vi{result}"
                         elif "-varout" in message.content.split(" "):
-                            result = FUNC_LIST[f](client,message,vc,\
+                            result = FUNC_LIST[f](client,message,\
                                 inopt=VAR[int(message.content.split(' ')[2])],outopt="v")
                             flag = f"vi{result}"
                         else:
@@ -236,7 +235,7 @@ async def on_message(message):
                         if str(flag).startswith("vi"):
                             result = flag[2:]
                         elif result == "e":
-                            result = FUNC_LIST[f](client,message,vc,outopt="v")
+                            result = FUNC_LIST[f](client,message,outopt="v")
                         for i in range(100):
                             if VAR[i] == None:
                                 VAR[i] = result
@@ -252,12 +251,12 @@ async def on_message(message):
                         if str(flag).startswith("vi"):
                             result = flag[2:]
                         elif result == "e":
-                            result = FUNC_LIST[f](client,message,vc,outopt="i")
+                            result = FUNC_LIST[f](client,message,outopt="i")
                         imgout(result)
                         await message.channel.send(file=discord.File(\
                             os.path.join(os.path.dirname(__file__), "/tmp/img.jpg")))
                     if result == "e":
-                        result = FUNC_LIST[f](client,message,vc)
+                        result = FUNC_LIST[f](client,message)
                         await message.channel.send(result)
             
             vccom = message.content
@@ -266,7 +265,7 @@ async def on_message(message):
             else:
                 vccom = vccom[1:]
             if vccom in VC_LIST:
-                await func.vcfunc(vccom, message, vc)
+                await func.vcfunc(vccom, message)
 
 
         #await f.textfunc_(client, message, vc_id)
@@ -274,5 +273,6 @@ async def on_message(message):
 
 #voice = client.join_voice_channel(client.get_channel("317228479416500227"))
 
-client.run(os.environ.get("DISCORD_TOKEN"))
+client.run("NTAyNDYzMzUyNzMyMjU0MjA5.XTr3ZQ.dnDOSdhBEWqQQDl9ZSJiitkGq6c")
+#client.run(os.environ.get("DISCORD_TOKEN"))
 #client.run("NTAyNDYzMzUyNzMyMjU0MjA5.XTqmjA.GyT9Ck5QpwaDKOUy4rwBK9ZMNQQ")
