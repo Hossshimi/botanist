@@ -6,9 +6,66 @@ from datetime import datetime, timedelta
 import getweather
 t = datetime.now
 
-from discord.ext import commands
+import youtube_dl
 
 vc = {}
+cue = {}
+
+async def dl(url,videoid,chid):
+    global cue
+    opts = {
+        "format":"bestaudio/best",
+        "outtmpl":videoid + ".mp4",
+        'postprocessors':[
+            {'key':'FFmpegExtractAudio',
+            'preferredcodec':'mp3',
+            'preferredquality':'192'},
+        ],
+    }
+    with youtube_dl.YoutubeDL(opts) as ydl:
+        ydl.download([url])
+    try: cue[chid].append(videoid)
+    except: cue[chid] = [videoid]
+
+async def yaudio(msg):
+    global cue
+    url = msg.content[9:]
+    if url.startswith("http"):
+        videoid = url[url.index("?v=")+3:]
+        await dl(url,videoid,msg.author.voice.channel.id)
+
+async def naudio(msg):
+    global cue
+    url = msg.content[6:]
+    if url.startswith("http"):
+        videoid = url[url.index("sm"):]
+        await dl(url,videoid,msg.author.voice.channel.id)
+
+def musicctrl(msg):
+    global vc,cue
+    command = msg.content[7:]
+    if command == "start":
+        #print("start")
+        musicbotter(msg)
+    elif command == "clear":
+        chid = msg.author.voice.channel.id
+        cue[chid].clear()
+    elif command == "skip":
+        chid = msg.author.voice.channel.id
+        cue[chid].pop(0)
+        vc[chid].stop()
+
+def musicbotter(msg):
+    def after(old):
+        os.remove(old)
+        musicbotter(msg)
+    global vc,cue
+    vc_id = msg.author.voice.channel.id
+    if cue[vc_id]:
+        audioname = cue[vc_id].pop(0) + ".mp3"
+        #print("1")
+        vc[vc_id].play(discord.FFmpegPCMAudio(audioname),after=lambda _: after(audioname))
+        #print("2")
 
 async def vcfunc(audioname, msg): #音声流すだけ
     #print(t().strftime("[ %H:%M:%S ] "),"start audio function[",audioname,"]...")

@@ -1,4 +1,4 @@
-VERSION = "4.6.6"
+VERSION = "5.0.0"
 
 import discord
 import random
@@ -210,6 +210,12 @@ async def on_message(message):
         #voice = client.voice_client_in(channel.server)
         
         if message.content.startswith(">"):
+            if message.content.startswith(">youtube"):
+                await func.yaudio(message)
+            elif message.content.startswith(">nico"):
+                await func.naudio(message)
+            elif message.content.startswith(">music"):
+                func.musicctrl(message)
             for f in FUNC_LIST:
                 if str(message.content[1:]).startswith(f):
                     flag = True
