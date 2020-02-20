@@ -1,7 +1,7 @@
 import discord
-client = discord.Client()
+#client = discord.Client()
 
-import sys,os,json,random
+import sys,os,json,random,re
 from datetime import datetime, timedelta
 import getweather
 t = datetime.now
@@ -10,6 +10,8 @@ import youtube_dl
 
 vc = {}
 cue = {}
+
+import numpy
 
 async def dl(url,videoid,chid):
     global cue
@@ -322,22 +324,276 @@ def kodakumi(client,message,inopt=None,outopt=None):
     else:
         return "easylevelが対応範囲外じゃないの?\nUsed to be help参照は easy"
 
-#    if message.content.startswith(">lovelyradio"):
-#        await client.send_message(message.channel, "えいニャ！えいニャ！渚の小悪魔☆えいニャ！えいニャ！ラヴリィ～レイディオ！")
+white = 1
+black = -1
+blank = 0
+
+class MOB():
+    def __init__(self):
+        self.cell = numpy.zeros((8,8))
+        self.cell = self.cell.astype(int)
+        self.cell[3][3] = self.cell[4][4] = 1
+        self.cell[3][4] = self.cell[4][3] = -1
+        self.current = black
+        self.turn = 1
+        self.dspl = ["",""]
+    
+    def turnchange(self):
+        MOBoard.current *= -1
+    
+    def rangecheck(self,x,y):  # ①　盤内かどうか　
+        if x == None: x = -1
+        if y == None: y = -1
+        if x < 0 or 8 <= x  or y < 0 or 8 <= y:
+            return False
+        return True
+
+    def check_can_reverse(self,x,y):  # 置けるかどうか
+        #if not MOBoard.rangecheck(x,y):   # →　①へ
+        #    return False
+        if not MOBoard.cell[x][y] == blank:   #  ②
+            return False
+        elif not MOBoard.can_reverse_stone(x,y):   # →　③へ
+            return False
+        else: return True
+
+    def can_reverse_one(self,x,y,dx,dy):  # ⑶、⑷　　(dx,dy)方向に敵石があり、その先に自石があるかどうか
+
+        #if not MOBoard.rangecheck(x+dx,y+dy):
+        #    return False
+        length = 0
+        if not MOBoard.cell[x+dx][y+dy] == -MOBoard.current: #  ⑶
+            return False # (dx,dy)方向が敵石じゃない時False
+        else:    
+            while MOBoard.cell[x+dx][y+dy] == -MOBoard.current: 
+                x +=dx
+                y +=dy
+                length += 1
+                if MOBoard.cell[x+dx][y+dy] == MOBoard.current:  # ⑷-True
+                    return length
+                elif not MOBoard.cell[x+dx][y+dy] == -MOBoard.current:
+                    continue
+                else: return False
+            else: return False  # ⑷-False
+
+    def can_reverse_stone(self,x,y):  # 　③入力座標ではひっくり返せる石はあるか
+        for dx in range(-1,2):
+            for dy in range(-1,2):
+                if dx == dy == 0: continue   # ⑴
+                elif (not MOBoard.rangecheck(x+dx,y+dy)): continue  # ①（調べた範囲が番外だったらエラーが起こるため）
+                elif not MOBoard.can_reverse_one(x,y,dx,dy):  # →　⑶、⑷の処理へ
+                    continue
+                else: return True
+
+    def reverse_stone(self,x,y): #  ④ 座標に石を置いて石をひっくり返す
+            for dx in (-1,0,1):
+                for dy in (-1,0,1):
+                    length = MOBoard.can_reverse_one(x,y,dx,dy)
+                    if length == None: length = 0
+                    if length > 0:
+                        for l in range(length):
+                            k = l+1
+                            self.cell[x + dx*k][y + dy*k] *= -1
+
+    def display(self):  # 盤面の状況を表示
+        #print('==='*10)
+        b = ["","","","","","","",""]
+        for y in range(8):
+            if y == 0: b[y] += "\n:one:"
+            elif y == 1: b[y] += ":two:"
+            elif y == 2: b[y] += ":three:"
+            elif y == 3: b[y] += ":four:"
+            elif y == 4: b[y] += ":five:"
+            elif y == 5: b[y] += ":six:"
+            elif y == 6: b[y] += ":seven:"
+            elif y == 7: b[y] += ":eight:"
+            for x in range(8):
+                if MOBoard.cell[x][y] == blank:
+                    b[y] += "<:b:650704687280160784>"
+                elif MOBoard.cell[x][y] == white:
+                    b[y] += "<:W:650692140422266892>"
+                    #print('W', end = '  ')
+                elif MOBoard.cell[x][y] == black:
+                    b[y] += "<:B:650692249746669568>"
+                    #print('B', end = '  ')
+            #print('\n', end = '')
+        MOBoard.dspl[0] = "<:b:650704687280160784>:regional_indicator_a::regional_indicator_b:"+\
+            ":regional_indicator_c::regional_indicator_d::regional_indicator_e:"+\
+            ":regional_indicator_f::regional_indicator_g::regional_indicator_h:."
+        MOBoard.dspl[1] = "\n".join(b)
+
+    def put_stone(self,x,y):  # 一回のターン内の行動 
+        if MOBoard.check_can_reverse(x,y):   # 入力座標に石を置ける
+            #self.pass_count = 0
+            MOBoard.cell[x][y] = MOBoard.current
+            MOBoard.reverse_stone(x,y)
+            MOBoard.turnchange()
+            return True
+        else:  # 入力座標に石を置けない
+            return False
+
+    def check_put_place(self):  # ❶盤面上に石が置ける場所があるか　次のクラスの時に使用
+        for i in range(8):
+            for j in range(8):
+                if MOBoard.check_can_reverse(i,j): # (i,j)座標に置いて石が置けたら成立
+                    return True
+                else:continue
+        return False
+
+class MOG(MOB):
+    def __init__(self):
+        self.white_count = 2
+        self.black_scount = 2
+        self.blank_count = 60
+        self.place_point = [None,None]
+        self.Player_Black_Member = None
+        self.Player_White_Member = None
+        self.status = None
+        self.channel = None
+
+    def Entry(self,pB,pW):
+        self.Player_Black_Member = pB
+        self.Player_White_Member = pW
+
+    # パスをする関数
+    def pass_system(self):  #  ②
+        #board.pass_count += 1
+        MOBoard.turnchange()
+        #if board.pass_count ==2:  # 連続二回パスしたので③のゲームを終わらせる関数へ移動
+        #    self.gameset()
+        return True
+
+    async def gameset(self): #  ③ ゲーム終了、石の数をカウントし勝敗を表示
+        self.count_system()
+        desc = "《ホワイト》 : "+str(self.white_count)+\
+            " / 《二グロ》 : "+str(self.black_count)+"\n\n"
+        
+        if self.white_count > self.black_count:
+            desc += "白人 WIN!!"
+        if self.white_count < self.black_count:
+            desc += "黒人 WIN!!"
+        if self.white_count == self.black_count:
+            desc += "!!平和!!"
+        embed = discord.Embed(title="-=≡ GAME SET ≡=-",\
+            description=desc,color=0xffa000)
+        await self.channel.send(embed=embed)
+        self.status = "set"
 
 
-    """if 'フェリス' in message.content:
-        reply = 'フェリス女学院大学 〒245-8650 横浜市泉区緑園4-5-3\nhttp://www.ferris.ac.jp/'
-        await client.send_message(message.channel, reply)"""
+    def count_system(self):  #  ⑤ 石のカウントシステム
+        self.white_count = numpy.sum(MOBoard.cell == white)
+        self.black_count = numpy.sum(MOBoard.cell == black)
+        self.blank_count = numpy.sum(MOBoard.cell == blank)
+
+    #def input_point(self):    #  ① 座標を入力
+        #print('石を置く座標を(1~8で)入力してください。(x,y)=(9,9)でpass、(0,0)で終了します。')
+        #x = input('x>>')
+        #y = input('y>>')
+        #try:
+        #    x = int(x)-1
+        #    y = int(y)-1
+        #except:
+        #    self.input_point()
+        #return x, y
+
+    def one_turn_play(self):  # ①〜⑤と❶をまとめる（❶に関しては上に記述）　
+        if MOGame.place_point != [None,None] and MOBoard.check_put_place():  #  ❶ 盤面に石が置ける場所があるかどうか
+            x = MOGame.place_point[0]   #  ① 座標を入力
+            y = MOGame.place_point[1]
+            MOBoard.put_stone(x,y)  # Boardクラスで作ったやつ。石をおいてひっ繰り返してTrueを返すか、何もせずFalseを返す
+            if not MOBoard.put_stone(x,y):
+                    if (x,y) == (8,8):       #  ② パスするとき
+                        self.pass_system()
+                    elif (x,y) == (-1,-1):   #  ③ ゲームをやめる時
+                        self.gameset()
+                    #石をおけない時は もう一度同じことをする
+                    while False:
+                        self.one_turn_play()     
+        else:self.pass_system()
+
+    def a2n(self,a):
+        if a == "a": MOGame.place_point[0] = 0
+        elif a == "b": MOGame.place_point[0] = 1
+        elif a == "c": MOGame.place_point[0] = 2
+        elif a == "d": MOGame.place_point[0] = 3
+        elif a == "e": MOGame.place_point[0] = 4
+        elif a == "f": MOGame.place_point[0] = 5
+        elif a == "g": MOGame.place_point[0] = 6
+        elif a == "h": MOGame.place_point[0] = 7
+        elif a == "i": MOGame.place_point[0] = 8
+
+    # 最後まで続くようにしてみる   
+    async def gameplay(self,client):
+        while self.blank_count >0:
+            MOBoard.display()
+            await self.channel.send(MOBoard.dspl[0])
+            await self.channel.send(MOBoard.dspl[1])
+            MOBoard.turn += 1
+            self.status = "-" + str(MOBoard.turn) + "年目-\n"
+            if MOBoard.current == -1:
+                self.status += f"{self.Player_Black_Member.mention} 《ニグロ》のターン\n"+\
+                    ""
+            elif MOBoard.current == 1:
+                self.status += f"{self.Player_White_Member.mention} 《ホワイト》のターン\n"
+            await self.channel.send(self.status)
+            self.place_point = [None,None]
+            await self.channel.send("位置を入力してください:")
+            def check(m):
+                return bool(re.match(r">([A-Za-z]\d)|\d[A-Za-z]",m.content))
+            msg = await client.wait_for("message",check=check)
+            if re.match(r"[A-Ia-i]",msg.content[1]) and re.match(r"[1-9]",msg.content[2]):
+                MOGame.a2n(msg.content[1])
+                self.place_point[1] = int(msg.content[2])-1
+            elif re.match(r"[A-Ia-i]",msg.content[2]) and re.match(r"[1-9]",msg.content[1]):
+                MOGame.a2n(msg.content[2])
+                self.place_point[1] = int(msg.content[1])-1
+
+            #print('-----'*10)
+            self.one_turn_play()   # ターンでの行動
+            self.count_system()   # 石とblankの数を出す
+            await self.channel.send('<:W:650692140422266892> : '+str(self.white_count)+' / <:B:650692249746669568> : '+str(self.black_count))
+            #print('pass_count : ',MOBoard.pass_count)
+        self.gameset()
+
+MOBoard = None
+MOGame = None
+
+async def MO(client,message):
+    global MOBoard,MOGame
+    if (not MOGame): # 何も無い
+        MOBoard = MOB()
+        MOGame = MOG()
+        MOGame.channel = message.channel
+
+        desc = "Matsuoka Othelloのマッチが開始されました.\n"+\
+            "《二グロ》にエントリーするプレイヤーは先に,\n"+\
+            ">MO entry B\n"+\
+            "《ホワイト》にエントリーするプレイヤーはその後,\n"+\
+            ">MO entry W\n"+\
+            "を送信してください.\n\n"+\
+            "最終的な勢力が大きかった人種の勝利です."
+        embed = discord.Embed(title="-=≡ Matsuoka Othelloへようこそ ≡=-",\
+            description=desc,color=0xffa000)
+        embed.set_thumbnail(url="https://gyazo.com/3426e16d4dfe1765ae95afbe5b87363f")
+        await message.channel.send(message.author.mention,embed=embed)
+
+        def check_b(m):
+            return m.content.startswith(">MO entry B")
+        def check_w(m):
+            return m.content.startswith(">MO entry W")
+        try:
+            msg = await client.wait_for("message",check=check_b,timeout=30)
+            await message.channel.send(f"{msg.author.mention} 《二グロ》にエントリーしました.\n"+\
+                "続いて《ホワイト》のエントリーを行います.")
+            pb = msg.author
+            msg = await client.wait_for("message",check=check_w,timeout=30)
+            await message.channel.send(f"{msg.author.mention} 《ホワイト》にエントリーしました.")
+            MOGame.Entry(pB=pb,pW=msg.author)
+        except:
+            await message.channel.send("エントリーがタイムアウトしたため,マッチは解散しました.")
+            MOBoard = None
+            MOGame = None
+        
+        await MOGame.gameplay(client)
 
     
-    """if message.content.startswith('>allclean'): #全発言を削除        
-        clean_flag = True
-        while (clean_flag):
-            msgs = [msg async for msg in client.logs_from(message.channel)]
-            if len(msgs) > 1: # 1発言以下でdelete_messagesするとエラーになる
-                await client.delete_messages(msgs)
-            else:
-                clean_flag = False
-                await client.send_message(message.channel, '-----Deleted all log-----')
-        """

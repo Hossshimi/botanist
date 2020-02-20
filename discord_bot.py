@@ -50,9 +50,10 @@ FUNC_LIST = {
     "kodakumi" : func.kodakumi,
     "honda" : func.honda,
     "hide" : func.hide,
-    "usr" : func.usr
+    "usr" : func.usr,
+    "MO" : func.MO
 }
-COR_LIST = ["join","leave","honda","nick"]
+COR_LIST = ["join","leave","honda","nick","MO"]
 #vc_id = "317228479416500227" #chikwa
 #vc_id = "392898035090456589" #test server
 """for c in client.get_all_channels():
