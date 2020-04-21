@@ -131,7 +131,7 @@ async def on_voice_state_update(member,before, after): #VC参加時にairhorn
                 #    voice = await client.join_voice_channel(channel)
                 #finally:
                     sleep(1)
-                    func.vc[vc_id].play(discord.FFmpegPCMAudio("sounds\\i_love.mp3"))
+                    func.vc[vc_id].play(discord.FFmpegPCMAudio("./sounds/i_love.mp3"))
                     #player.start()
 
 
