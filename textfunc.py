@@ -33,7 +33,10 @@ async def yaudio(msg):
     global cue
     url = msg.content[9:]
     if url.startswith("http"):
-        videoid = url[url.index("?v=")+3:]
+        try:
+            videoid = url[url.index("?v=")+3:url.index("&")]
+        except:
+            videoid = url[url.index("?v=")+3:]
         await dl(url,videoid,msg.author.voice.channel.id)
 
 async def naudio(msg):
@@ -54,20 +57,24 @@ def musicctrl(msg):
         cue[chid].clear()
     elif command == "skip":
         chid = msg.author.voice.channel.id
-        cue[chid].pop(0)
+        #cue[chid].pop(0)
         vc[chid].stop()
+        musicbotter(msg)
 
 def musicbotter(msg):
-    def after(old):
-        os.remove(old)
+    def after(msg):
+        #os.remove(old)
         musicbotter(msg)
     global vc,cue
     vc_id = msg.author.voice.channel.id
-    if cue[vc_id]:
-        audioname = cue[vc_id].pop(0) + ".mp3"
-        #print("1")
-        vc[vc_id].play(discord.FFmpegPCMAudio(audioname),after=lambda _: after(audioname))
-        #print("2")
+    try:
+        if cue[vc_id]:
+            audioname = cue[vc_id].pop(0) + ".mp3"
+            #print("1")
+            vc[vc_id].play(discord.FFmpegPCMAudio(audioname),after=lambda _: after(msg))
+            #print("2")
+    except:
+        msg.channel.send("**CUE is empty!**")
 
 async def vcfunc(audioname, msg): #音声流すだけ
     #print(t().strftime("[ %H:%M:%S ] "),"start audio function[",audioname,"]...")
