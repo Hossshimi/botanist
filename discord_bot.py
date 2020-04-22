@@ -114,7 +114,7 @@ async def on_ready(): #-------起動時処理-------------
 async def on_voice_state_update(member,before, after): #VC参加時にairhorn
     global YM_flag,pflag
     if YM_flag and (member.id == 482875226502332416) and (not pflag) :
-        if before.channel == None:
+        #if before.channel == None:
             #global vc_id
             #channel = after.channel
             vc_id = after.channel.id
