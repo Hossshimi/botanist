@@ -266,7 +266,37 @@ async def on_message(message):
                         imgout(result)
                         await message.channel.send(file=discord.File(\
                             os.path.join(os.path.dirname(__file__), "/tmp/img.jpg")))
-                    if result == "e":
+                    
+                    if (result == "e") and message.content.startswith(">deltmp"):
+                        now = t()
+                        since = message.content.split()[1]
+                        if since == "help":
+                            text = [
+                                message.author.mention,
+                                "[deltmp] usage:",
+                                "this command will delete your posts,",
+                                "which starts with `>del`.",
+                                "Examples:",
+                                "    >del text1\n    >deltext2\n    deltext3",
+                                "text1, text2 will be deleted. text3 won't be deleted.",
+                                "`>deltmp {since}` : delete your posts since `since` **hours**."
+                            ]
+                            await message.channel.send(f"{message.author.mention} \n{text}")
+                        elif since.isnumeric():
+                            await message.channel.send(f"{message.author.mention} [deltmp] start deleting(since: {since} hour(s))")
+                            del_count = 0
+                            async for msg in message.channel.history(limit=1000):
+                                posted_time = message.created_at
+                                if (msg.author == message.author) and \
+                                    (msg.content.startswith(">del")) and \
+                                    ((now - posted_time) <= timedelta(hours=int(since))):
+                                    await msg.delete()
+                                    del_count += 1
+                            await message.channel.send(f"{message.author.mention} [deltmp] finished: your {int(del_count)} post(s) has been deleted")
+                        else:
+                            await message.channel.send(f"{message.author.mention} err:deltmp:invalid option")
+
+                    elif result == "e":
                         result = FUNC_LIST[f](client,message)
                         await message.channel.send(result)
             
