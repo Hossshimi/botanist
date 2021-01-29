@@ -93,10 +93,34 @@ async def vcfunc(audioname, msg): #音声流すだけ
     except:
         pass
     finally:
-        vc[vc_id].play(discord.FFmpegPCMAudio(audio_path))
+        vc[vc_id].play(discord.FFmpegPCMAudio(audio_path,options="-af volume=-10dB"))
+    #player = player[vc_id]
+    #print(t().strftime("[ %H:%M:%S ] "),"finish audio function[",audioname,"]")
 
-async def join(client,message,inopt=None,outopt=None): #join vc
-    global vc_id,vc
+
+#async def textfunc_(client, message, vc_id):
+#    global rep_list
+    #======== Text Channel ==============================================================
+"""if message.content.startswith(">channel"): #change voice channel
+    user = message.content
+    user = user[:10]
+    if user == "chikuwa":
+        vc_id = "317228479416500227"
+        old_id = "392898035090456589"
+    elif user == "test":
+        vc_id = "392898035090456589"
+        old_id = "317228479416500227"
+    channel = client.get_channel(vc_id)
+    channel_old = client.get_channel(old_id)
+    voice = client.voice_client_in(channel_old.server)
+    await voice.disconnect()
+    await client.join_voice_channel(channel)"""
+
+    #if message.content.startswith(">donotstop"): #止まるんじゃねえぞ
+    #    vc_lock = False
+
+async def join(client,message,vc,inopt=None,outopt=None): #join vc
+    global vc_id,airhorn_flag
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
     if message.author.voice.channel == None:

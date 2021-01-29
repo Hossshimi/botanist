@@ -1,4 +1,4 @@
-VERSION = "5.2.0"
+VERSION = "5.2.1"
 
 import discord
 import random
@@ -50,8 +50,8 @@ FUNC_LIST = {
     "kodakumi" : func.kodakumi,
     "honda" : func.honda,
     "hide" : func.hide,
-    "usr" : func.usr,
-    "MO" : func.MO
+    #"usr" : func.usr,
+    #"MO" : func.MO
 }
 
 COR_LIST = ["join","leave","honda","nick","MO"]
@@ -110,29 +110,29 @@ async def on_ready(): #-------起動時処理-------------
     except: pass
     finally: pass
 
-@client.event
-async def on_voice_state_update(member,before, after): #VC参加時にairhorn
-    global YM_flag,pflag
-    if YM_flag and (member.id == 482875226502332416) and (not pflag) :
-        #if before.channel == None:
-            #global vc_id
-            #channel = after.channel
-            vc_id = after.channel.id
-            #global player
-            try:
-                player[vc_id].stop()
-            except:
-                pass
-            finally:
-                #try:
-                #    if func.vc[vc_id]:
-                #        voice = client.voice_client_in(channel.server)
-                #except:
-                #    voice = await client.join_voice_channel(channel)
-                #finally:
-                    sleep(1)
-                    func.vc[vc_id].play(discord.FFmpegPCMAudio("./sounds/i_love.mp3"))
-                    #player.start()
+#@client.event
+#async def on_voice_state_update(member,before, after): #VC参加時にairhorn
+#    global YM_flag,pflag
+#    if YM_flag and (member.id == 482875226502332416) and (not pflag) :
+#        #if before.channel == None:
+#            #global vc_id
+#            #channel = after.channel
+#            vc_id = after.channel.id
+#            #global player
+#            try:
+#                player[vc_id].stop()
+#            except:
+#                pass
+#            finally:
+#                #try:
+#                #    if func.vc[vc_id]:
+#                #        voice = client.voice_client_in(channel.server)
+#                #except:
+#                #    voice = await client.join_voice_channel(channel)
+#                #finally:
+#                    sleep(1)
+#                    func.vc[vc_id].play(discord.FFmpegPCMAudio("./sounds/i_love.mp3"))
+#                    #player.start()
 
 
 @client.event
