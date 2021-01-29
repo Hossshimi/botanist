@@ -1,4 +1,4 @@
-VERSION = "4.4.11"
+VERSION = "5.2.0"
 
 import discord
 import random
@@ -26,7 +26,13 @@ VC_LIST = ["neverdie", "sumanko", "airhorn", "goldrush1", "goldrush2",
             "scream","yarimasunee","kowareruwa","yurusite","soudayo",
             "haha","USSR","roboto","mankoja","jamayaro","oi","ike","dase",
             "keshigomu","marmelo","saikyou","TF","doko","hujino","h2",
-            "yoneken","muscle","sidechest"]
+            "yoneken","muscle","sidechest","ikerune","naniwo","oatumari",
+            "ohayou","shakaijin","sizukani","subarasii","tanosikatta",
+            "uttaemasu","edmfaq","faq","kobuside","mouowatta","osikko",
+            "we","yuunou","daisuki","gomenna","kottikara","naraomae",
+            "faqfaq","faaq","ruready","countdown","aim","ak","arigatoak",
+            "dekee","dokosumi","hikeyo","lemon","pine","sugoi","tuee","zako",
+            "zisin","heke","hamutarou","nikuniku"]
 FUNC_LIST = {
     "join" : func.join,
     "leave" : func.leave,
@@ -43,17 +49,18 @@ FUNC_LIST = {
     "walkingdrum" : func.walkingdrum,
     "kodakumi" : func.kodakumi,
     "honda" : func.honda,
-    "hide" : func.hide
+    "hide" : func.hide,
+    "usr" : func.usr,
+    "MO" : func.MO
 }
-COR_LIST = ["join","leave","honda","nick"]
-#vc_id = "317228479416500227" #chikwa
+
+COR_LIST = ["join","leave","honda","nick","MO"]
 #vc_id = "392898035090456589" #test server
 """for c in client.get_all_channels():
     print(c.name)"""
 vc_id = None
 player = {}
-vc = {}
-airhorn_flag = False
+YM_flag = True
 vc_lock = False
 pflag = False
 LOG_CHANNEL = None
@@ -103,25 +110,29 @@ async def on_ready(): #-------起動時処理-------------
     except: pass
     finally: pass
 
-"""@client.event
-async def on_voice_state_update(before, after): #VC参加時にairhorn
-    global airhorn_flag,pflag
-    if airhorn_flag and (not pflag) :
-        if before.voice_channel is None:
-            global vc_id
-            channel = client.get_channel(vc_id)
-            global player
+@client.event
+async def on_voice_state_update(member,before, after): #VC参加時にairhorn
+    global YM_flag,pflag
+    if YM_flag and (member.id == 482875226502332416) and (not pflag) :
+        #if before.channel == None:
+            #global vc_id
+            #channel = after.channel
+            vc_id = after.channel.id
+            #global player
             try:
-                player.stop()
+                player[vc_id].stop()
             except:
                 pass
             finally:
-                if client.is_voice_connected(channel.server):
-                    voice = client.voice_client_in(channel.server)
-                else:
-                    voice = await client.join_voice_channel(channel)
-                player = voice.create_ffmpeg_player(r'D:\Backup\work\discord_bot\sounds\airhorn.mp3')
-                player.start()"""
+                #try:
+                #    if func.vc[vc_id]:
+                #        voice = client.voice_client_in(channel.server)
+                #except:
+                #    voice = await client.join_voice_channel(channel)
+                #finally:
+                    sleep(1)
+                    func.vc[vc_id].play(discord.FFmpegPCMAudio("./sounds/i_love.mp3"))
+                    #player.start()
 
 
 @client.event
@@ -131,13 +142,13 @@ async def on_message(message):
             return
  #--------------重要な制御-------------------------------------
     if message.author.id==311147580715171842 : #管理者権限
-        if message.content.startswith(">p"): #pause
+        if message.content == ">p": #pause
             if pflag: pass
             else:
                 pflag = True
                 log = (t()+timedelta(hours=9)).strftime("[ %H:%M:%S ] ")+"----- paused -----"
                 await LOG_CHANNEL.send(log)
-        if message.content.startswith(">rsm"): #resume
+        if message.content == ">rsm": #resume
             if (not pflag): pass
             else:
                 pflag = False
@@ -197,30 +208,36 @@ async def on_message(message):
             reply += "```"
             await message.channel.send(reply)
 
-        global player,airhorn_flag,vc_lock,FONTPATH,FUNC_LIST
+        global player,vc_lock,FONTPATH,FUNC_LIST
         #vc_id = "317228479416500227" #chikwa
         #old_id = ""
         #channel = client.get_channel(vc_id)
         #voice = client.voice_client_in(channel.server)
         
         if message.content.startswith(">"):
+            if message.content.startswith(">youtube"):
+                await func.yaudio(message)
+            elif message.content.startswith(">nico"):
+                await func.naudio(message)
+            elif message.content.startswith(">music"):
+                func.musicctrl(message)
             for f in FUNC_LIST:
                 if str(message.content[1:]).startswith(f):
-                    flag = True # judge while True
+                    flag = True
                     result = "e"
                     if f in COR_LIST:
-                        await FUNC_LIST[f](client,message,vc)
+                        await FUNC_LIST[f](client,message)
                         flag = False
                         result = ""
                     if ("-varin" in message.content.split(" ")) and flag:
-                        result = FUNC_LIST[f](client,message,vc,\
+                        result = FUNC_LIST[f](client,message,\
                             inopt=VAR[ int(message.content.split(' ')[2]) ])
                         if "-imgout" in message.content.split(" "):
-                            result = FUNC_LIST[f](client,message,vc,\
+                            result = FUNC_LIST[f](client,message,\
                                 inopt=VAR[int(message.content.split(' ')[2])],outopt="i")
                             flag = f"vi{result}"
                         elif "-varout" in message.content.split(" "):
-                            result = FUNC_LIST[f](client,message,vc,\
+                            result = FUNC_LIST[f](client,message,\
                                 inopt=VAR[int(message.content.split(' ')[2])],outopt="v")
                             flag = f"vi{result}"
                         else:
@@ -229,7 +246,7 @@ async def on_message(message):
                         if str(flag).startswith("vi"):
                             result = flag[2:]
                         elif result == "e":
-                            result = FUNC_LIST[f](client,message,vc,outopt="v")
+                            result = FUNC_LIST[f](client,message,outopt="v")
                         for i in range(100):
                             if VAR[i] == None:
                                 VAR[i] = result
@@ -245,18 +262,51 @@ async def on_message(message):
                         if str(flag).startswith("vi"):
                             result = flag[2:]
                         elif result == "e":
-                            result = FUNC_LIST[f](client,message,vc,outopt="i")
+                            result = FUNC_LIST[f](client,message,outopt="i")
                         imgout(result)
                         await message.channel.send(file=discord.File(\
                             os.path.join(os.path.dirname(__file__), "/tmp/img.jpg")))
-                    if result == "e":
-                        result = FUNC_LIST[f](client,message,vc)
+                    
+                    if (result == "e") and message.content.startswith(">deltmp"):
+                        now = t()
+                        since = message.content.split()[1]
+                        if since == "help":
+                            text = [
+                                message.author.mention,
+                                "[deltmp] usage:",
+                                "this command will delete your posts,",
+                                "which starts with `>del`.",
+                                "Examples:",
+                                "    >del text1\n    >deltext2\n    deltext3",
+                                "text1, text2 will be deleted. text3 won't be deleted.",
+                                "`>deltmp {since}` : delete your posts since `since` **hours**."
+                            ]
+                            await message.channel.send(f"{message.author.mention} \n{text}")
+                        elif since.isnumeric():
+                            await message.channel.send(f"{message.author.mention} [deltmp] start deleting(since: {since} hour(s))")
+                            del_count = 0
+                            async for msg in message.channel.history(limit=1000):
+                                posted_time = message.created_at
+                                if (msg.author == message.author) and \
+                                    (msg.content.startswith(">del")) and \
+                                    ((now - posted_time) <= timedelta(hours=int(since))):
+                                    await msg.delete()
+                                    del_count += 1
+                            await message.channel.send(f"{message.author.mention} [deltmp] finished: your {int(del_count)} post(s) has been deleted")
+                        else:
+                            await message.channel.send(f"{message.author.mention} err:deltmp:invalid option")
+
+                    elif result == "e":
+                        result = FUNC_LIST[f](client,message)
                         await message.channel.send(result)
             
             vccom = message.content
-            vccom = vccom[1:]
+            if len(vccom) > 20:
+                vccom = vccom[1:-23]
+            else:
+                vccom = vccom[1:]
             if vccom in VC_LIST:
-                await func.vcfunc(vccom, message, vc)
+                await func.vcfunc(vccom, message)
 
 
         #await f.textfunc_(client, message, vc_id)
@@ -265,4 +315,3 @@ async def on_message(message):
 #voice = client.join_voice_channel(client.get_channel("317228479416500227"))
 
 client.run(os.environ.get("DISCORD_TOKEN"))
-#client.run("NTAyNDYzMzUyNzMyMjU0MjA5.XTqmjA.GyT9Ck5QpwaDKOUy4rwBK9ZMNQQ")
