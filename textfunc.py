@@ -119,7 +119,7 @@ async def vcfunc(audioname, msg): #音声流すだけ
     #if message.content.startswith(">donotstop"): #止まるんじゃねえぞ
     #    vc_lock = False
 
-async def join(client,message,vc,inopt=None,outopt=None): #join vc
+async def join(client,message,inopt=None,outopt=None): #join vc
     global vc_id,airhorn_flag
     LOG_CHANNEL_ID = 577890877234741248
     LOG_CHANNEL = client.get_channel(LOG_CHANNEL_ID)
