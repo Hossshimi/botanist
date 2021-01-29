@@ -1,4 +1,4 @@
-VERSION = "5.1.0"
+VERSION = "5.2.0"
 
 import discord
 import random
@@ -53,8 +53,8 @@ FUNC_LIST = {
     "usr" : func.usr,
     "MO" : func.MO
 }
+
 COR_LIST = ["join","leave","honda","nick","MO"]
-#vc_id = "317228479416500227" #chikwa
 #vc_id = "392898035090456589" #test server
 """for c in client.get_all_channels():
     print(c.name)"""
@@ -315,4 +315,3 @@ async def on_message(message):
 #voice = client.join_voice_channel(client.get_channel("317228479416500227"))
 
 client.run(os.environ.get("DISCORD_TOKEN"))
-#client.run("NTAyNDYzMzUyNzMyMjU0MjA5.XTqmjA.GyT9Ck5QpwaDKOUy4rwBK9ZMNQQ")
