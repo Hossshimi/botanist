@@ -27,7 +27,7 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 multidict==4.7.4
 numpy==1.18.1
-Pillow==6.1.0
+Pillow==7.1.0
 pycparser==2.19
 pylint==1.9.1
 PyNaCl==1.0.1
