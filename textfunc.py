@@ -28,7 +28,7 @@ async def dl(msg,url,videoid,chid):
         ydl.download([url])
     try: cue[chid].append(videoid)
     except: cue[chid] = [videoid]
-    finally: msg.channel.send("ready to play:"+videoid)
+    finally: await msg.channel.send("ready to play:"+videoid)
 
 async def yaudio(msg):
     global cue
