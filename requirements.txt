@@ -44,4 +44,4 @@ websockets==8.1
 Werkzeug==0.15.2
 wrapt==1.10.11
 yarl==1.4.2
-youtube-dl==2020.3.24
+youtube-dl==2021.2.10

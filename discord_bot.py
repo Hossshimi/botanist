@@ -1,4 +1,4 @@
-VERSION = "5.2.2"
+VERSION = "5.2.3"
 
 import discord
 import random
@@ -15,8 +15,6 @@ import textfunc as func
 import subprocess
 
 from datetime import datetime, timedelta
-
-from PIL import Image, ImageDraw, ImageFont
 
 client = discord.Client()
 t = datetime.now
@@ -54,7 +52,7 @@ FUNC_LIST = {
     #"MO" : func.MO
 }
 
-COR_LIST = ["join","leave","honda","nick","MO"]
+COR_LIST = ["join","leave","shutup","honda","nick","MO"]
 #vc_id = "392898035090456589" #test server
 """for c in client.get_all_channels():
     print(c.name)"""
@@ -78,15 +76,6 @@ def getpath(rpath):
     apath = os.path.normpath(os.path.join(base,"..",rpath))
     return apath
 
-def imgout(usertext):
-    global FONTPATH,FONTSIZE,COLOR
-    #print(FONTPATH)
-    font = ImageFont.truetype(FONTPATH,FONTSIZE)
-    width, height = font.getsize_multiline(usertext)
-    bg_ = Image.new("RGB", (width,height+10), (0,0,0))
-    bg = ImageDraw.Draw(bg_)
-    bg.multiline_text((0,0), usertext, fill=COLOR, font=font)
-    bg_.save(os.path.join(os.path.dirname(__file__), "/tmp/img.jpg"))
 
 
 @client.event
@@ -229,43 +218,6 @@ async def on_message(message):
                         await FUNC_LIST[f](client,message)
                         flag = False
                         result = ""
-                    if ("-varin" in message.content.split(" ")) and flag:
-                        result = FUNC_LIST[f](client,message,\
-                            inopt=VAR[ int(message.content.split(' ')[2]) ])
-                        if "-imgout" in message.content.split(" "):
-                            result = FUNC_LIST[f](client,message,\
-                                inopt=VAR[int(message.content.split(' ')[2])],outopt="i")
-                            flag = f"vi{result}"
-                        elif "-varout" in message.content.split(" "):
-                            result = FUNC_LIST[f](client,message,\
-                                inopt=VAR[int(message.content.split(' ')[2])],outopt="v")
-                            flag = f"vi{result}"
-                        else:
-                            await message.channel.send(result)
-                    if ("-varout" in message.content.split(" ")) and flag:
-                        if str(flag).startswith("vi"):
-                            result = flag[2:]
-                        elif result == "e":
-                            result = FUNC_LIST[f](client,message,outopt="v")
-                        for i in range(100):
-                            if VAR[i] == None:
-                                VAR[i] = result
-                                await message.channel.send(f"_its var number is_ : **{i}**")
-                                flag = False
-                                break
-                            if i==99:
-                                VAR = [None for x in range(100)]
-                                VAR[0] = result
-                                await message.channel.send("_its var number is_ : **0**")
-                                flag = False
-                    if ("-imgout" in message.content.split(" ")) and flag:
-                        if str(flag).startswith("vi"):
-                            result = flag[2:]
-                        elif result == "e":
-                            result = FUNC_LIST[f](client,message,outopt="i")
-                        imgout(result)
-                        await message.channel.send(file=discord.File(\
-                            os.path.join(os.path.dirname(__file__), "/tmp/img.jpg")))
                     
                     if (result == "e") and message.content.startswith(">deltmp"):
                         now = t()
